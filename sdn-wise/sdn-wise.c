@@ -31,7 +31,8 @@
 #include "net/rime/rime.h"
 #include "net/linkaddr.h"  
 #include "dev/watchdog.h"
-#include "dev/uart1.h"
+//#include "dev/uart1.h"
+#include "dev/uart0.h"
 #include "dev/leds.h"  
 #include "lib/list.h"
 #if CFS_ENABLED
@@ -160,9 +161,12 @@
 /*----------------------------------------------------------------------------*/
   PROCESS_THREAD(main_proc, ev, data) {
     PROCESS_BEGIN();
-    
-    uart1_init(BAUD2UBR(115200));       /* set the baud rate as necessary */
-    uart1_set_input(uart_rx_callback);  /* set the callback function */
+	
+    //uart1_init(BAUD2UBR(115200));       /* set the baud rate as necessary */
+    //uart1_set_input(uart_rx_callback);  /* set the callback function */    
+
+    uart0_init(BAUD2UBR(115200));       /* set the baud rate as necessary */
+    uart0_set_input(uart_rx_callback);  /* set the callback function */
 
     node_conf_init();
     flowtable_init();
@@ -179,37 +183,44 @@
       PROCESS_WAIT_EVENT();
       switch(ev) {
         case TIMER_EVENT:
-      // test_handle_open_path();
-      // test_flowtable();
-      // test_neighbor_table();
-      // test_packet_buffer();
-      // test_address_list();
-      //  print_node_conf();
+     // it was commented
+       //test_handle_open_path();
+       //test_flowtable();
+       //test_neighbor_table();
+       //test_packet_buffer();
+       //test_address_list();
+       print_node_conf();
         break;
 
         case UART_RECEIVE_EVENT:
         leds_toggle(LEDS_GREEN);
+	PRINTF("UART Received Event");
         process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
         break;
 
         case RF_B_RECEIVE_EVENT:
         leds_toggle(LEDS_YELLOW);
+	PRINTF("Broadcast Packet Received Event");
         if (!conf.is_active){
           conf.is_active = 1;
           process_post(&beacon_timer_proc, ACTIVATE_EVENT, (process_data_t)NULL);
           process_post(&report_timer_proc, ACTIVATE_EVENT, (process_data_t)NULL);
         }
         case RF_U_RECEIVE_EVENT:
+	//Million added
+	PRINTF("Unicast Packet Received Event");
         process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
         break;
 
         case RF_SEND_BEACON_EVENT:
         leds_toggle(LEDS_RED);
+	PRINTF("Beacon Sent Event");
         rf_broadcast_send(create_beacon());
         break;
 
         case RF_SEND_REPORT_EVENT:
         leds_toggle(LEDS_RED);
+	PRINTF("Report Sent Event");
         rf_unicast_send(create_report());
         break;
       } 

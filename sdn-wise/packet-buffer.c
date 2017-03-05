@@ -70,11 +70,15 @@
   print_packet(packet_t* p)
   {
     uint16_t i = 0;
-    PRINTF("%d %d ", p->header.net, p->header.len);
+    PRINTF("Network ID: %d Packet Length: %d ", p->header.net, p->header.len);
+    PRINTF("Packet Dst:");
     print_address(&(p->header.dst));
+    PRINTF("Packet Src:");
     print_address(&(p->header.src));
-    PRINTF("%d %d ", p->header.typ, p->header.ttl);
+    PRINTF("Pkt Type: %d TTL: %d ", p->header.typ, p->header.ttl);
+    PRINTF("Next Hop: ");
     print_address(&(p->header.nxh));
+    PRINTF("Payload: ");
     for (i=0; i < (p->header.len - PLD_INDEX); ++i){
       PRINTF("%d ",get_payload_at(p,i));
     }
