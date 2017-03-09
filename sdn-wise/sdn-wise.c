@@ -189,18 +189,18 @@
        //test_neighbor_table();
        //test_packet_buffer();
        //test_address_list();
-       print_node_conf();
+       //print_node_conf();
         break;
 
         case UART_RECEIVE_EVENT:
         leds_toggle(LEDS_GREEN);
-	PRINTF("UART Received Event");
+	PRINTF("UART Received Event\n");
         process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
         break;
 
         case RF_B_RECEIVE_EVENT:
         leds_toggle(LEDS_YELLOW);
-	PRINTF("Broadcast Packet Received Event");
+	PRINTF("Broadcast Packet Received Event\n");
         if (!conf.is_active){
           conf.is_active = 1;
           process_post(&beacon_timer_proc, ACTIVATE_EVENT, (process_data_t)NULL);
@@ -208,19 +208,19 @@
         }
         case RF_U_RECEIVE_EVENT:
 	//Million added
-	PRINTF("Unicast Packet Received Event");
+	PRINTF("Unicast Packet Received Event\n");
         process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
         break;
 
         case RF_SEND_BEACON_EVENT:
         leds_toggle(LEDS_RED);
-	PRINTF("Beacon Sent Event");
+	PRINTF("Beacon Sent Event\n");
         rf_broadcast_send(create_beacon());
         break;
 
         case RF_SEND_REPORT_EVENT:
         leds_toggle(LEDS_RED);
-	PRINTF("Report Sent Event");
+	PRINTF("Report Sent Event\n");
         rf_unicast_send(create_report());
         break;
       } 
@@ -239,7 +239,7 @@
 
       if (p != NULL){
         p->header.ttl--;
-
+	PRINTF("Unicast Sending\n");
         PRINTF("[TXU]: ");
         print_packet(p);
         PRINTF("\n");
@@ -286,6 +286,7 @@
 
       if (p != NULL){
         p->header.ttl--;
+	PRINTF("Broadcast Sending\n");
         PRINTF("[TXB]: ");
         print_packet(p);
         PRINTF("\n");
@@ -350,7 +351,7 @@
     while(1) {
       PROCESS_WAIT_EVENT_UNTIL(ev == NEW_PACKET_EVENT);
       packet_t* p = (packet_t*)data;
-
+      PRINTF("New Packet Arrived in Packet Handler\n");
       PRINTF("[RX ]: ");
       print_packet(p);
       PRINTF("\n");

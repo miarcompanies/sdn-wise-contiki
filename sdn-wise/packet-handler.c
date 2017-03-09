@@ -180,7 +180,9 @@ const void* conf_ptr[RULE_TTL+1] =
   handle_report(packet_t* p)
   {
 #if SINK
-    print_packet_uart(p);
+      //Million Added
+      //PRINTF("Sending To Controller From Sink");
+      print_packet_uart(p);
 #else 
     
     p->header.nxh = conf.nxh_vs_sink;
