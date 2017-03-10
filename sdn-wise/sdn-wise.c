@@ -133,17 +133,39 @@
   uart_rx_callback(unsigned char c)
   {
     // TODO works with cooja, will not work with real nodes, cause -> syn
+    PRINTF("UART CALLBACK STARTING");
     uart_buffer[uart_buffer_index] = c;
     if (uart_buffer_index == LEN_INDEX){
-      uart_buffer_expected = c;
+      //Million: reduced size of expected for fast printing
+      //uart_buffer_expected = c;
+      uart_buffer_expected = 10;
     }
     uart_buffer_index++;
     if (uart_buffer_index == uart_buffer_expected){
       uart_buffer_index = 0;
       uart_buffer_expected = 0;
-      packet_t* p = get_packet_from_array(uart_buffer);
+      //Million: trying to create config packet
+      //packet_t* p = get_packet_from_array(uart_buffer);
+      packet_t* p = create_packet_empty();
+      p->header.net = conf.my_net;
+      set_broadcast_address(&(p->header.dst));
+      p->header.src = conf.my_address;
+      p->header.typ = CONFIG;
+      p->header.nxh = conf.nxh_vs_sink;
+      set_payload_at(p, 0, uart_buffer[0]);
+      set_payload_at(p, 1, uart_buffer[1]);
+      set_payload_at(p, 2, uart_buffer[2]);
+      set_payload_at(p, 3, uart_buffer[3]);
+      set_payload_at(p, 4, uart_buffer[4]);
+      set_payload_at(p, 5, uart_buffer[5]);
+      set_payload_at(p, 6, uart_buffer[6]);
+      set_payload_at(p, 7, uart_buffer[7]);
+      set_payload_at(p, 8, uart_buffer[8]);
+      set_payload_at(p, 9, uart_buffer[9]);
+      rf_broadcast_send(p);
       if (p != NULL){
         p->info.rssi = 255;
+	PRINTF("Buffered packet with 10 bytes sent to main process(Function for printing will be developed)");
         process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p);  
       }
     }
@@ -189,7 +211,7 @@
        //test_neighbor_table();
        //test_packet_buffer();
        //test_address_list();
-       print_node_conf();
+       //print_node_conf();
         break;
 
         case UART_RECEIVE_EVENT:
