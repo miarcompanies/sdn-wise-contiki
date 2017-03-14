@@ -110,12 +110,17 @@
   unicast_rx_callback(struct unicast_conn *c, const linkaddr_t *from)
   {
     packet_t* p = get_packet_from_array((uint8_t *)packetbuf_dataptr());
+    PRINTF("Unicast Received: ");
+    print_packet(p);
     if (p != NULL){
       // TODO the exact rssi value depends on the radio (search for a formula)
+      PRINTF("Unicast Received but is null\n");
+      print_packet(p);
       p->info.rssi = (uint8_t) (- packetbuf_attr(PACKETBUF_ATTR_RSSI));
       process_post(&main_proc, RF_U_RECEIVE_EVENT, (process_data_t)p);
     }
   }
+
 /*----------------------------------------------------------------------------*/
   static void
   broadcast_rx_callback(struct broadcast_conn *c, const linkaddr_t *from)
@@ -133,7 +138,7 @@
   uart_rx_callback(unsigned char c)
   {
     // TODO works with cooja, will not work with real nodes, cause -> syn
-    PRINTF("UART CALLBACK STARTING");
+    PRINTF("UART CALLBACK");
     uart_buffer[uart_buffer_index] = c;
     if (uart_buffer_index == LEN_INDEX){
       //Million: reduced size of expected for fast printing
@@ -165,8 +170,8 @@
       rf_broadcast_send(p);
       if (p != NULL){
         p->info.rssi = 255;
-	PRINTF("Buffered packet with 10 bytes sent to main process(Function for printing will be developed)");
-        process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p);  
+	PRINTF("Buffered packet with 10 bytes sent as broadcast(Function for printing will be developed)");
+        //process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p);  
       }
     }
     return 0;
@@ -216,34 +221,38 @@
 
         case UART_RECEIVE_EVENT:
         leds_toggle(LEDS_GREEN);
-	PRINTF("UART Received Event\n");
+	PRINTF("UART Receive Event\n");
         process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
         break;
 
         case RF_B_RECEIVE_EVENT:
         leds_toggle(LEDS_YELLOW);
-	PRINTF("Broadcast Packet Received Event\n");
+	PRINTF("Broadcast Packet Receive Event\n");
         if (!conf.is_active){
           conf.is_active = 1;
           process_post(&beacon_timer_proc, ACTIVATE_EVENT, (process_data_t)NULL);
           process_post(&report_timer_proc, ACTIVATE_EVENT, (process_data_t)NULL);
         }
+ 	//Million I suggest to have break
+        //break;
         case RF_U_RECEIVE_EVENT:
 	//Million added
-	PRINTF("Unicast Packet Received Event\n");
+	PRINTF("Unicast Packet Receive Event\n");
         process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
         break;
 
         case RF_SEND_BEACON_EVENT:
         leds_toggle(LEDS_RED);
-	PRINTF("Beacon Sent Event\n");
+	PRINTF("Beacon Send Event\n");
         rf_broadcast_send(create_beacon());
         break;
 
         case RF_SEND_REPORT_EVENT:
         leds_toggle(LEDS_RED);
-	PRINTF("Report Sent Event\n");
-        rf_unicast_send(create_report());
+	//PRINTF("Send Report Event\n");
+	//Million modified unicast to broadcast
+        //rf_unicast_send(create_report());
+	//rf_broadcast_send(create_report());
         break;
       } 
     }
@@ -261,11 +270,6 @@
 
       if (p != NULL){
         p->header.ttl--;
-	PRINTF("Unicast Sending\n");
-        PRINTF("[TXU]: ");
-        print_packet(p);
-        PRINTF("\n");
-
         if (!is_my_address(&(p->header.dst))){
           int i = 0;
 
@@ -280,17 +284,36 @@
           for ( i=0; i<sent_size; ++i){
             addr.u8[i] = p->header.nxh.u8[(sent_size-1)-i];
           }
-
+//Million change the addresses whole if block part in else is original code
+#if !SINK
+ 	addr.u8[0] = p->header.nxh.u8[1];
+        addr.u8[1] = p->header.nxh.u8[0];
+#else
           addr.u8[0] = p->header.nxh.u8[1];
           addr.u8[1] = p->header.nxh.u8[0];
-          uint8_t* a = (uint8_t*)p;
+#endif
+          //Million added next two lines for debugging
+ 	  PRINTF("[TXU]: ");
+	  print_packet(p);
+	  uint8_t* a = (uint8_t*)p;
           packetbuf_copyfrom(a,p->header.len);
           unicast_send(&uc, &addr);
+	  PRINTF("Unicast Message Sent Successfully\n");
         } 
+#if !SINK
+	else{
+		PRINTF("Unicast Message Not Sent Successfully\n");
+	} 
+#endif
 #if SINK
         else {
+	  //Million A.
+          PRINTF("PRINTING REPORT TO UART\n");
           print_packet_uart(p);
         }
+        //Million A
+        if(p->header.typ == REPORT)
+                PRINTF("SINK Sending Report Packet - To Controller(Method will be developed)\n");
 #endif
         packet_deallocate(p);
       }
@@ -308,7 +331,6 @@
 
       if (p != NULL){
         p->header.ttl--;
-	PRINTF("Broadcast Sending\n");
         PRINTF("[TXB]: ");
         print_packet(p);
         PRINTF("\n");
@@ -363,7 +385,10 @@
 #endif
       etimer_set(&et, conf.report_period * CLOCK_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
-      process_post(&main_proc, RF_SEND_REPORT_EVENT, (process_data_t)NULL);
+      //Million change this to broadcast
+      //process_post(&main_proc, RF_SEND_REPORT_EVENT, (process_data_t)NULL);
+      PRINTF("Send Report as broadcast\n");
+      rf_broadcast_send(create_report());
     }
     PROCESS_END();
   }

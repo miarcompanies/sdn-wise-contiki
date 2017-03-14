@@ -104,14 +104,29 @@ const void* conf_ptr[RULE_TTL+1] =
   void 
   handle_packet(packet_t* p)
   {
+    //Million A: check if report packet is arriving
+      if(p->header.typ == CONFIG)
+	PRINTF("[CONFIG]: CONFIG Packet Arrived\n");    
     
-    if (p->info.rssi >= conf.rssi_min && p->header.net == conf.my_net){
+      if (p->info.rssi >= conf.rssi_min && p->header.net == conf.my_net){
       if (p->header.typ == BEACON){
         PRINTF("[PHD]: Beacon\n");
         handle_beacon(p);
       } else {
-        if (is_my_address(&(p->header.nxh))){
-          switch (p->header.typ){
+	print_packet(p);
+	PRINTF("NXH: ");
+	print_address(&(p->header.nxh));
+ 	PRINTF("conf.myaddress: ");
+        print_address(&(conf.my_address));
+	PRINTF("Handle Packet Before Switch Case\n");
+        //Million Commented because if is not executing
+	if(is_my_address(&(p->header.nxh)))
+		PRINTF("True \n");
+	else
+		PRINTF("False \n");
+        // Million commented next if condition, because condition was false most of the time
+	//if(is_my_address(&(p->header.nxh))){
+	  switch (p->header.typ){
             case DATA:
             PRINTF("[PHD]: Data\n");
             handle_data(p);
@@ -137,7 +152,7 @@ const void* conf_ptr[RULE_TTL+1] =
             handle_report(p);
             break;
           }
-        }
+       // }
       }
     } else {
       packet_deallocate(p);
@@ -181,7 +196,7 @@ const void* conf_ptr[RULE_TTL+1] =
   {
 #if SINK
       //Million Added
-      //PRINTF("Sending To Controller From Sink");
+      PRINTF("I got a Report, Sending To Controller From Sink");
       print_packet_uart(p);
 #else 
     
@@ -306,6 +321,17 @@ const void* conf_ptr[RULE_TTL+1] =
   void
   handle_config(packet_t* p)
   {
+    //Million Added add entry to flow table and display flow table
+    PRINTF("Flow Table - Before\n");
+    print_flowtable();
+    entry_t* e = create_entry();
+    action_t* a = create_action(FORWARD_U, &(p->payload[0]), ADDRESS_LENGTH);
+    add_action(e,a);
+    PRINTF("This Entry to be added to flowtable\n");
+    print_entry(e);
+    add_entry(e);
+    PRINTF("Flow Table - After\n");
+    print_flowtable();
     if (is_my_address(&(p->header.dst)))
     {    
 #if SINK
