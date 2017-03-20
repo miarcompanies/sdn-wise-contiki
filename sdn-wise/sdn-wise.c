@@ -222,7 +222,7 @@
         case UART_RECEIVE_EVENT:
         leds_toggle(LEDS_GREEN);
 	PRINTF("UART Receive Event\n");
-        process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
+        //process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
         break;
 
         case RF_B_RECEIVE_EVENT:
@@ -234,7 +234,7 @@
           process_post(&report_timer_proc, ACTIVATE_EVENT, (process_data_t)NULL);
         }
  	//Million I suggest to have break
-        //break;
+        break;
         case RF_U_RECEIVE_EVENT:
 	//Million added
 	PRINTF("Unicast Packet Receive Event\n");
@@ -249,10 +249,8 @@
 
         case RF_SEND_REPORT_EVENT:
         leds_toggle(LEDS_RED);
-	//PRINTF("Send Report Event\n");
-	//Million modified unicast to broadcast
-        //rf_unicast_send(create_report());
-	//rf_broadcast_send(create_report());
+	PRINTF("Send Report Event\n");
+        rf_unicast_send(create_report());
         break;
       } 
     }
@@ -349,7 +347,9 @@
     PROCESS_BEGIN();
 
     while(1) {
-      etimer_set(&et, 3 * CLOCK_SECOND);
+      //Million slow the timer from 3 to 10
+      //etimer_set(&et, 3 * CLOCK_SECOND);
+      etimer_set(&et, 10 * CLOCK_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
       process_post(&main_proc, TIMER_EVENT, (process_data_t)NULL);
     }
@@ -385,10 +385,7 @@
 #endif
       etimer_set(&et, conf.report_period * CLOCK_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
-      //Million change this to broadcast
-      //process_post(&main_proc, RF_SEND_REPORT_EVENT, (process_data_t)NULL);
-      PRINTF("Send Report as broadcast\n");
-      rf_broadcast_send(create_report());
+      process_post(&main_proc, RF_SEND_REPORT_EVENT, (process_data_t)NULL);
     }
     PROCESS_END();
   }
