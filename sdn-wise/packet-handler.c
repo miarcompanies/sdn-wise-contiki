@@ -182,7 +182,7 @@ const void* conf_ptr[RULE_TTL+1] =
 #if SINK
       //Million Added
       PRINTF("I got a Report, Sending To Controller From Sink\n");
-      //print_packet_uart(p);
+      print_packet_uart(p);
 #else 
     
     p->header.nxh = conf.nxh_vs_sink;
@@ -313,23 +313,23 @@ const void* conf_ptr[RULE_TTL+1] =
     action_t* a;
     //Million if Node 1, 2, 3, specify address accordingly
     uint8_t addr[ADDRESS_LENGTH];
-    if(p->payload[2] == '1'){
+    if(p->payload[3] == 49 || p->payload[4] == 49){ //'1'
     	addr[0] = 2;
         addr[1] = 0;
     }
-    else if(p->payload[2] == '2'){
+    else if(p->payload[3] == 50 || p->payload[4] == 50){ //'2'
         addr[0] = 3;
         addr[1] = 0;
     }
-    else if(p->payload[2] == '3'){
+    else if(p->payload[3] == 51 || p->payload[4] == 51){//'3'
         addr[0] = 4;
         addr[1] = 0;
     }
-    else if(p->payload[2] == '4'){
+    else if(p->payload[3] == 52 || p->payload[4] == 52){//'4'
         addr[0] = 5;
         addr[1] = 0;
     }
-    else if(p->payload[2] == '5'){
+    else if(p->payload[3] == 53 || p->payload[4] == 53){//'5'
         addr[0] = 6;
         addr[1] = 0;
     }
@@ -337,16 +337,28 @@ const void* conf_ptr[RULE_TTL+1] =
     	addr[0] = 1;
         addr[1] = 0;
     }
-    if(p->payload[1] == 'u')
+    if(p->payload[2] == 117){ //'u'
 	//a = create_action(FORWARD_U, &(p->payload[0]), ADDRESS_LENGTH);
-    	a = create_action(FORWARD_U, &(addr[0]), ADDRESS_LENGTH);
-    else if(p->payload[1] == 'b')
+    	a = create_action(FORWARD_U, &(addr[0]), ADDRESS_LENGTH); 
+    }
+    else if(p->payload[2] == 98) //'b'
 	a = create_action(FORWARD_B, &(addr[0]), ADDRESS_LENGTH);
-    else if(p->payload[1] == 'a')
+    else if(p->payload[2] == 97) //'a'
 	a = create_action(ASK, &(addr[0]), ADDRESS_LENGTH);
     else
  	a = create_action(DROP, &(addr[0]), ADDRESS_LENGTH);
     add_action(e,a);
+    //Million ... window added
+    //uint8_t win_array[3] = {1,2,3},
+    //window_t *win = get_window_from_array(&win_array[0]);
+    //window_t* w = create_window();
+    //w->operation = EQUAL;
+    //w->size = SIZE_2;
+    //w->lhs = DST_INDEX;
+    //w->lhs_location = PACKET;
+    //w->rhs = MERGE_BYTES(p->payload[0], p->payload[1]);
+    //w->rhs_location = CONST;
+    //add_window(e,w);
     PRINTF("This Entry to be added to flowtable\n");
     print_entry(e);
     add_entry(e);
@@ -356,7 +368,7 @@ const void* conf_ptr[RULE_TTL+1] =
     {    
 #if SINK
       if (!is_my_address(&(p->header.src))){
-        //print_packet_uart(p);
+        print_packet_uart(p);
       } else {
 #endif
       uint8_t i = 0;

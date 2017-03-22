@@ -138,7 +138,7 @@
     if (uart_buffer_index == LEN_INDEX){
       //Million: reduced size of expected for fast printing
       //uart_buffer_expected = c;
-      uart_buffer_expected = 3;
+      uart_buffer_expected = 6;
     }
     uart_buffer_index++;
     if (uart_buffer_index == uart_buffer_expected){
@@ -149,23 +149,23 @@
       packet_t* p = create_packet_empty();
       p->header.net = conf.my_net;
       //set_broadcast_address(&(p->header.dst));
-      if(uart_buffer[0] == '1'){
+      if(uart_buffer[0] == 49 || uart_buffer[1] == 49){ //'1'
       	p->header.dst.u8[0] = 2;
       	p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == '2'){
+      else if(uart_buffer[0] == 50 || uart_buffer[1] == 50){//'2'
 	p->header.dst.u8[0] = 3;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == '3'){
+      else if(uart_buffer[0] == 51 || uart_buffer[1] == 51){ //'3'
         p->header.dst.u8[0] = 4;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == '4'){
+      else if(uart_buffer[0] == 52 || uart_buffer[1] == 52){//'4'
         p->header.dst.u8[0] = 5;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == '5'){
+      else if(uart_buffer[0] == 53 || uart_buffer[1] == 53){//'5'
         p->header.dst.u8[0] = 6;
         p->header.dst.u8[1] = 0;
       }
@@ -180,6 +180,8 @@
       set_payload_at(p, 0, uart_buffer[0]);
       set_payload_at(p, 1, uart_buffer[1]);
       set_payload_at(p, 2, uart_buffer[2]);
+      set_payload_at(p, 3, uart_buffer[3]);
+      set_payload_at(p, 4, uart_buffer[4]);
       //rf_broadcast_send(p);
       if (p != NULL){
         p->info.rssi = 255;
@@ -217,7 +219,7 @@
     leds_init();
 
 #if SINK
-    //print_packet_uart(create_reg_proxy());
+    print_packet_uart(create_reg_proxy());
 #endif    
 
     while(1) {
@@ -318,7 +320,7 @@
 		//Million A.
         	if(p->header.typ == REPORT)
                 	PRINTF("SINK Sending Report Packet - To Controller(Method will be developed)\n");
-		//print_packet_uart(p);
+		print_packet_uart(p);
 	}
 #endif
         packet_deallocate(p);

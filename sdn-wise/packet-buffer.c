@@ -52,7 +52,8 @@
   print_packet_uart(packet_t* p)
   {
     uint16_t i = 0;
-#if !COOJA
+    //Million Commented out all except deallocate
+/*#if !COOJA
     putchar(122);
 #endif
     uint8_t* tmp = (uint8_t*)p;
@@ -62,7 +63,7 @@
 #if !COOJA
     putchar(126);
     putchar('\n');
-#endif
+#endif */
     packet_deallocate(p);
   }
 /*----------------------------------------------------------------------------*/
