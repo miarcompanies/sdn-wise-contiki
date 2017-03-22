@@ -105,27 +105,12 @@ const void* conf_ptr[RULE_TTL+1] =
   handle_packet(packet_t* p)
   {
     //Million A: check if report packet is arriving
-      if(p->header.typ == CONFIG)
-	PRINTF("[CONFIG]: CONFIG Packet Arrived\n");    
-    
       if (p->info.rssi >= conf.rssi_min && p->header.net == conf.my_net){
       if (p->header.typ == BEACON){
         PRINTF("[PHD]: Beacon\n");
         handle_beacon(p);
       } else {
-	print_packet(p);
-	PRINTF("NXH: ");
-	print_address(&(p->header.nxh));
- 	PRINTF("conf.myaddress: ");
-        print_address(&(conf.my_address));
-	PRINTF("Handle Packet Before Switch Case\n");
-        //Million Commented because if is not executing
-	if(is_my_address(&(p->header.nxh)))
-		PRINTF("True \n");
-	else
-		PRINTF("False \n");
-        // Million commented next if condition, because condition was false most of the time
-	//if(is_my_address(&(p->header.nxh))){
+	if(is_my_address(&(p->header.nxh))){
 	  switch (p->header.typ){
             case DATA:
             PRINTF("[PHD]: Data\n");
@@ -152,7 +137,7 @@ const void* conf_ptr[RULE_TTL+1] =
             handle_report(p);
             break;
           }
-       // }
+        }
       }
     } else {
       packet_deallocate(p);
@@ -196,8 +181,8 @@ const void* conf_ptr[RULE_TTL+1] =
   {
 #if SINK
       //Million Added
-      PRINTF("I got a Report, Sending To Controller From Sink");
-      print_packet_uart(p);
+      PRINTF("I got a Report, Sending To Controller From Sink\n");
+      //print_packet_uart(p);
 #else 
     
     p->header.nxh = conf.nxh_vs_sink;
@@ -325,7 +310,42 @@ const void* conf_ptr[RULE_TTL+1] =
     PRINTF("Flow Table - Before\n");
     print_flowtable();
     entry_t* e = create_entry();
-    action_t* a = create_action(FORWARD_U, &(p->payload[0]), ADDRESS_LENGTH);
+    action_t* a;
+    //Million if Node 1, 2, 3, specify address accordingly
+    uint8_t addr[ADDRESS_LENGTH];
+    if(p->payload[2] == '1'){
+    	addr[0] = 2;
+        addr[1] = 0;
+    }
+    else if(p->payload[2] == '2'){
+        addr[0] = 3;
+        addr[1] = 0;
+    }
+    else if(p->payload[2] == '3'){
+        addr[0] = 4;
+        addr[1] = 0;
+    }
+    else if(p->payload[2] == '4'){
+        addr[0] = 5;
+        addr[1] = 0;
+    }
+    else if(p->payload[2] == '5'){
+        addr[0] = 6;
+        addr[1] = 0;
+    }
+    else{
+    	addr[0] = 1;
+        addr[1] = 0;
+    }
+    if(p->payload[1] == 'u')
+	//a = create_action(FORWARD_U, &(p->payload[0]), ADDRESS_LENGTH);
+    	a = create_action(FORWARD_U, &(addr[0]), ADDRESS_LENGTH);
+    else if(p->payload[1] == 'b')
+	a = create_action(FORWARD_B, &(addr[0]), ADDRESS_LENGTH);
+    else if(p->payload[1] == 'a')
+	a = create_action(ASK, &(addr[0]), ADDRESS_LENGTH);
+    else
+ 	a = create_action(DROP, &(addr[0]), ADDRESS_LENGTH);
     add_action(e,a);
     PRINTF("This Entry to be added to flowtable\n");
     print_entry(e);
@@ -336,7 +356,7 @@ const void* conf_ptr[RULE_TTL+1] =
     {    
 #if SINK
       if (!is_my_address(&(p->header.src))){
-        print_packet_uart(p);
+        //print_packet_uart(p);
       } else {
 #endif
       uint8_t i = 0;

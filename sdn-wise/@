@@ -116,7 +116,6 @@
       process_post(&main_proc, RF_U_RECEIVE_EVENT, (process_data_t)p);
     }
   }
-
 /*----------------------------------------------------------------------------*/
   static void
   broadcast_rx_callback(struct broadcast_conn *c, const linkaddr_t *from)
@@ -134,65 +133,29 @@
   uart_rx_callback(unsigned char c)
   {
     // TODO works with cooja, will not work with real nodes, cause -> syn
+    printf("UART Char: %c\n", c);
     uart_buffer[uart_buffer_index] = c;
     if (uart_buffer_index == LEN_INDEX){
-      //Million: reduced size of expected for fast printing
-      //uart_buffer_expected = c;
-      uart_buffer_expected = 3;
+      uart_buffer_expected = c;
     }
     uart_buffer_index++;
+    printf("uart buffer index: %d expected: %d\n", uart_buffer_index, uart_buffer_expected);
     if (uart_buffer_index == uart_buffer_expected){
       uart_buffer_index = 0;
       uart_buffer_expected = 0;
-      //Million: trying to create config packet
-      //packet_t* p = get_packet_from_array(uart_buffer);
-      packet_t* p = create_packet_empty();
-      p->header.net = conf.my_net;
-      //set_broadcast_address(&(p->header.dst));
-      if(uart_buffer[0] == '1'){
-      	p->header.dst.u8[0] = 2;
-      	p->header.dst.u8[1] = 0;
-      }
-      else if(uart_buffer[0] == '2'){
-	p->header.dst.u8[0] = 3;
-        p->header.dst.u8[1] = 0;
-      }
-      else if(uart_buffer[0] == '3'){
-        p->header.dst.u8[0] = 4;
-        p->header.dst.u8[1] = 0;
-      }
-      else if(uart_buffer[0] == '4'){
-        p->header.dst.u8[0] = 5;
-        p->header.dst.u8[1] = 0;
-      }
-      else if(uart_buffer[0] == '5'){
-        p->header.dst.u8[0] = 6;
-        p->header.dst.u8[1] = 0;
-      }
-      else{
-	p->header.dst.u8[0] = 1;
-        p->header.dst.u8[1] = 0;
-      }
-      p->header.src = conf.my_address;
-      p->header.typ = CONFIG;
-      //p->header.nxh = conf.nxh_vs_sink;
-      p->header.nxh = p->header.dst;
-      set_payload_at(p, 0, uart_buffer[0]);
-      set_payload_at(p, 1, uart_buffer[1]);
-      set_payload_at(p, 2, uart_buffer[2]);
-      //rf_broadcast_send(p);
+      packet_t* p = get_packet_from_array(uart_buffer);
+      PRINTF("UART Packet Received Event not sent to main process, packet is null\n");
       if (p != NULL){
         p->info.rssi = 255;
-	PRINTF("Configuration packet created and passed to main process\n");
-        //process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p);  
-        rf_unicast_send(p);
+        process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p); 
+	PRINTF("UART Packet Received Event sent to main process\n"); 
       }
     }
     return 0;
   }
 /*----------------------------------------------------------------------------*/
-  static const struct unicast_callbacks unicast_callbacks = {
-	unicast_rx_callback 
+  static const struct unicast_callbacks unicast_callbacks = { 
+    unicast_rx_callback 
   };
   static struct unicast_conn uc;
   static const struct broadcast_callbacks broadcast_callbacks = { 
@@ -217,7 +180,7 @@
     leds_init();
 
 #if SINK
-    //print_packet_uart(create_reg_proxy());
+    print_packet_uart(create_reg_proxy());
 #endif    
 
     while(1) {
@@ -235,43 +198,34 @@
 
         case UART_RECEIVE_EVENT:
         leds_toggle(LEDS_GREEN);
-	PRINTF("UART Receive\n");
-        //process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
-	//packet_t* p = (packet_t*)data;
-        //rf_unicast_send(p);
+	PRINTF("UART Received Event\n");
+        process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
         break;
 
         case RF_B_RECEIVE_EVENT:
         leds_toggle(LEDS_YELLOW);
-	PRINTF("Broadcast Packet Receive\n");
+	PRINTF("Broadcast Packet Received Event\n");
         if (!conf.is_active){
           conf.is_active = 1;
           process_post(&beacon_timer_proc, ACTIVATE_EVENT, (process_data_t)NULL);
           process_post(&report_timer_proc, ACTIVATE_EVENT, (process_data_t)NULL);
         }
- 	//Million I suggest to have break
-        //break;
         case RF_U_RECEIVE_EVENT:
 	//Million added
-	PRINTF("Unicast Packet Receive\n");
+	PRINTF("Unicast Packet Received Event\n");
         process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
         break;
 
         case RF_SEND_BEACON_EVENT:
         leds_toggle(LEDS_RED);
-	PRINTF("Beacon Send\n");
+	PRINTF("Beacon Sent Event\n");
         rf_broadcast_send(create_beacon());
         break;
 
         case RF_SEND_REPORT_EVENT:
         leds_toggle(LEDS_RED);
-	PRINTF("Send Report\n");
-#if !SINK
+	PRINTF("Report Sent Event\n");
         rf_unicast_send(create_report());
-#else
-	PRINTF("SINK Sending Report - To Controller(Method will be developed)\n");
-#endif
-	//rf_broadcast_send(create_report());
         break;
       } 
     }
@@ -289,6 +243,11 @@
 
       if (p != NULL){
         p->header.ttl--;
+	PRINTF("Unicast Sending\n");
+        PRINTF("[TXU]: ");
+        print_packet(p);
+        PRINTF("\n");
+
         if (!is_my_address(&(p->header.dst))){
           int i = 0;
 
@@ -303,23 +262,17 @@
           for ( i=0; i<sent_size; ++i){
             addr.u8[i] = p->header.nxh.u8[(sent_size-1)-i];
           }
- 	  addr.u8[0] = p->header.nxh.u8[0];
-          addr.u8[1] = p->header.nxh.u8[1];
-          //Million added next two lines for debugging
- 	  PRINTF("[TXU]: ");
-	  print_packet(p);
-	  uint8_t* a = (uint8_t*)p;
+
+          addr.u8[0] = p->header.nxh.u8[1];
+          addr.u8[1] = p->header.nxh.u8[0];
+          uint8_t* a = (uint8_t*)p;
           packetbuf_copyfrom(a,p->header.len);
           unicast_send(&uc, &addr);
-	  PRINTF("Unicast Message Sent Successfully\n");
         } 
 #if SINK
         else {
-		//Million A.
-        	if(p->header.typ == REPORT)
-                	PRINTF("SINK Sending Report Packet - To Controller(Method will be developed)\n");
-		//print_packet_uart(p);
-	}
+          print_packet_uart(p);
+        }
 #endif
         packet_deallocate(p);
       }
@@ -337,6 +290,7 @@
 
       if (p != NULL){
         p->header.ttl--;
+	PRINTF("Broadcast Sending\n");
         PRINTF("[TXB]: ");
         print_packet(p);
         PRINTF("\n");
@@ -355,9 +309,7 @@
     PROCESS_BEGIN();
 
     while(1) {
-      //Million slow the timer from 3 to 10
-      //etimer_set(&et, 3 * CLOCK_SECOND);
-      etimer_set(&et, 10 * CLOCK_SECOND);
+      etimer_set(&et, 3 * CLOCK_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
       process_post(&main_proc, TIMER_EVENT, (process_data_t)NULL);
     }
@@ -404,7 +356,7 @@
       PROCESS_WAIT_EVENT_UNTIL(ev == NEW_PACKET_EVENT);
       packet_t* p = (packet_t*)data;
       PRINTF("New Packet Arrived in Packet Handler\n");
-      PRINTF("[RX]: ");
+      PRINTF("[RX ]: ");
       print_packet(p);
       PRINTF("\n");
       handle_packet(p);

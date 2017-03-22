@@ -62,8 +62,8 @@
     conf.my_address.u8[1] = linkaddr_node_addr.u8[0]; 
     conf.my_address.u8[0] = linkaddr_node_addr.u8[1];
     //Million A: Use static address
-#else
-    conf.my_address = get_address_from_int(_MY_ADDRESS);
+//#else
+    //conf.my_address = get_address_from_int(_MY_ADDRESS);
 #endif
     conf.requests_count = 0;
     conf.my_net = _NET;
@@ -74,28 +74,90 @@
     conf.packet_ttl = _PACKET_TTL;
 #if SINK
     //Million A. Static address added SINK = 0.1
-    //conf.my_address.u8[0] = 0; 
-    //conf.my_address.u8[1] = 1;
+    conf.my_address.u8[0] = 1; 
+    conf.my_address.u8[1] = 0;
     conf.is_active = 1;
     conf.nxh_vs_sink = conf.my_address;
     conf.sink_address = conf.my_address;;
     conf.hops_from_sink = 0;
     conf.rssi_from_sink = 255;
-#else
+#endif
+#if NODE1
     //Million A. static adderess added NODE = 0.5
-    conf.my_address.u8[0] = 0;
-    conf.my_address.u8[1] = 5;
-    //conf.sink_address.u8[0] = 0;
-    //conf.sink_address.u8[1] = 1;
+    conf.my_address.u8[0] = 2;
+    conf.my_address.u8[1] = 0;
+    conf.sink_address.u8[0] = 1;
+    conf.sink_address.u8[1] = 0;
     conf.nxh_vs_sink = conf.sink_address;
     //upto this are Million additions
     conf.is_active = 0;
     //Million commented out the next two lines, because broadcast address changes address of sink and nxh_vs_sink
-    set_broadcast_address(&(conf.nxh_vs_sink));
-    set_broadcast_address(&(conf.sink_address));
+    //set_broadcast_address(&(conf.nxh_vs_sink));
+    //set_broadcast_address(&(conf.sink_address));
     conf.hops_from_sink = _PACKET_TTL;
     conf.rssi_from_sink = 0;
 #endif 
+#if NODE2
+    //Million A. static adderess added NODE = 0.5
+    conf.my_address.u8[0] = 3;
+    conf.my_address.u8[1] = 0;
+    conf.sink_address.u8[0] = 1;
+    conf.sink_address.u8[1] = 0;
+    conf.nxh_vs_sink = conf.sink_address;
+    //upto this are Million additions
+    conf.is_active = 0;
+    //Million commented out the next two lines, because broadcast address changes address of sink and nxh_vs_sink
+    //set_broadcast_address(&(conf.nxh_vs_sink));
+    //set_broadcast_address(&(conf.sink_address));
+    conf.hops_from_sink = _PACKET_TTL;
+    conf.rssi_from_sink = 0;
+#endif
+#if NODE3
+    //Million A. static adderess added NODE = 0.5
+    conf.my_address.u8[0] = 4;
+    conf.my_address.u8[1] = 0;
+    conf.sink_address.u8[0] = 1;
+    conf.sink_address.u8[1] = 0;
+    conf.nxh_vs_sink = conf.sink_address;
+    //upto this are Million additions
+    conf.is_active = 0;
+    //Million commented out the next two lines, because broadcast address changes address of sink and nxh_vs_sink
+    //set_broadcast_address(&(conf.nxh_vs_sink));
+    //set_broadcast_address(&(conf.sink_address));
+    conf.hops_from_sink = _PACKET_TTL;
+    conf.rssi_from_sink = 0;
+#endif
+#if NODE4
+    //Million A. static adderess added NODE = 0.5
+    conf.my_address.u8[0] = 5;
+    conf.my_address.u8[1] = 0;
+    conf.sink_address.u8[0] = 1;
+    conf.sink_address.u8[1] = 0;
+    conf.nxh_vs_sink = conf.sink_address;
+    //upto this are Million additions
+    conf.is_active = 0;
+    //Million commented out the next two lines, because broadcast address changes address of sink and nxh_vs_sink
+    //set_broadcast_address(&(conf.nxh_vs_sink));
+    //set_broadcast_address(&(conf.sink_address));
+    conf.hops_from_sink = _PACKET_TTL;
+    conf.rssi_from_sink = 0;
+#endif
+#if NODE5
+    //Million A. static adderess added NODE = 0.5
+    conf.my_address.u8[0] = 5;
+    conf.my_address.u8[1] = 0;
+    conf.sink_address.u8[0] = 1;
+    conf.sink_address.u8[1] = 0;
+    conf.nxh_vs_sink = conf.sink_address;
+    //upto this are Million additions
+    conf.is_active = 0;
+    //Million commented out the next two lines, because broadcast address changes address of sink and nxh_vs_sink
+    //set_broadcast_address(&(conf.nxh_vs_sink));
+    //set_broadcast_address(&(conf.sink_address));
+    conf.hops_from_sink = _PACKET_TTL;
+    conf.rssi_from_sink = 0;
+#endif
+
   }
 /*----------------------------------------------------------------------------*/
   void
