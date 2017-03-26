@@ -175,6 +175,33 @@
       }
       p->header.src = conf.my_address;
       p->header.typ = CONFIG;
+      if(uart_buffer[0] == 64 && uart_buffer[1] == 64){ //dd for data 
+	p->header.typ = DATA;
+        if(uart_buffer[2] == 49 || uart_buffer[3] == 49){ //'1'
+        p->header.dst.u8[0] = 2;
+        p->header.dst.u8[1] = 0;
+      }
+      else if(uart_buffer[2] == 50 || uart_buffer[3] == 50){//'2'
+        p->header.dst.u8[0] = 3;
+        p->header.dst.u8[1] = 0;
+      }
+      else if(uart_buffer[2] == 51 || uart_buffer[3] == 51){ //'3'
+        p->header.dst.u8[0] = 4;
+        p->header.dst.u8[1] = 0;
+      }
+      else if(uart_buffer[2] == 52 || uart_buffer[3] == 52){//'4'
+        p->header.dst.u8[0] = 5;
+        p->header.dst.u8[1] = 0;
+      }
+      else if(uart_buffer[2] == 53 || uart_buffer[3] == 53){//'5'
+        p->header.dst.u8[0] = 6;
+        p->header.dst.u8[1] = 0;
+      }
+      else{
+        p->header.dst.u8[0] = 1;
+        p->header.dst.u8[1] = 0;
+      } 
+      }
       //p->header.nxh = conf.nxh_vs_sink;
       p->header.nxh = p->header.dst;
       set_payload_at(p, 0, uart_buffer[0]);
@@ -185,7 +212,10 @@
       //rf_broadcast_send(p);
       if (p != NULL){
         p->info.rssi = 255;
-	PRINTF("Configuration packet created and passed to main process\n");
+        if(p->header.typ == DATA)
+		PRINTF("DATA packet created and passed to main process\n");
+        else
+		PRINTF("Configuration packet created and passed to main process\n");
         //process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p);  
         rf_unicast_send(p);
       }
@@ -234,37 +264,8 @@
        //test_address_list();
        //print_node_conf();
 	//Million Added to display neighbor table and send data
-	print_neighbor_table();
-#if SINK
-	rf_unicast_send(create_data(1));
- 	rf_unicast_send(create_data(2));
-	rf_unicast_send(create_data(3));
- 	rf_unicast_send(create_data(4));
-#endif
-#if NODE1
-        rf_unicast_send(create_data(0));
-	rf_unicast_send(create_data(2));
-        rf_unicast_send(create_data(3));
-        rf_unicast_send(create_data(4));
-#endif
-#if NODE2
-        rf_unicast_send(create_data(0));
-	rf_unicast_send(create_data(1));
-        rf_unicast_send(create_data(3));
-        rf_unicast_send(create_data(4));
-#endif
-#if NODE3
-        rf_unicast_send(create_data(0));
-	rf_unicast_send(create_data(1));
-        rf_unicast_send(create_data(2));
-        rf_unicast_send(create_data(4));
-#endif
-#if NODE4
-        rf_unicast_send(create_data(0));
-	rf_unicast_send(create_data(1));
-        rf_unicast_send(create_data(2));
-        rf_unicast_send(create_data(3));
-#endif
+	printf("Neighbor Table\n");
+        print_neighbor_table();
         break;
 
         case UART_RECEIVE_EVENT:
