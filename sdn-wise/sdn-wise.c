@@ -174,33 +174,36 @@
         p->header.dst.u8[1] = 0;
       }
       p->header.src = conf.my_address;
-      p->header.typ = CONFIG;
+      //p->header.typ = CONFIG;
       if(uart_buffer[0] == 64 && uart_buffer[1] == 64){ //dd for data 
 	p->header.typ = DATA;
         if(uart_buffer[2] == 49 || uart_buffer[3] == 49){ //'1'
-        p->header.dst.u8[0] = 2;
-        p->header.dst.u8[1] = 0;
+        	p->header.dst.u8[0] = 2;
+	        p->header.dst.u8[1] = 0;
+	}
+        else if(uart_buffer[2] == 50 || uart_buffer[3] == 50){//'2'
+          p->header.dst.u8[0] = 3;
+          p->header.dst.u8[1] = 0;
+        }
+        else if(uart_buffer[2] == 51 || uart_buffer[3] == 51){ //'3'
+          p->header.dst.u8[0] = 4;
+          p->header.dst.u8[1] = 0;
+        }
+        else if(uart_buffer[2] == 52 || uart_buffer[3] == 52){//'4'
+          p->header.dst.u8[0] = 5;
+          p->header.dst.u8[1] = 0;
+        }
+        else if(uart_buffer[2] == 53 || uart_buffer[3] == 53){//'5'
+          p->header.dst.u8[0] = 6;
+          p->header.dst.u8[1] = 0;
+        }
+        else{
+          p->header.dst.u8[0] = 1;
+          p->header.dst.u8[1] = 0;
+       } 
       }
-      else if(uart_buffer[2] == 50 || uart_buffer[3] == 50){//'2'
-        p->header.dst.u8[0] = 3;
-        p->header.dst.u8[1] = 0;
-      }
-      else if(uart_buffer[2] == 51 || uart_buffer[3] == 51){ //'3'
-        p->header.dst.u8[0] = 4;
-        p->header.dst.u8[1] = 0;
-      }
-      else if(uart_buffer[2] == 52 || uart_buffer[3] == 52){//'4'
-        p->header.dst.u8[0] = 5;
-        p->header.dst.u8[1] = 0;
-      }
-      else if(uart_buffer[2] == 53 || uart_buffer[3] == 53){//'5'
-        p->header.dst.u8[0] = 6;
-        p->header.dst.u8[1] = 0;
-      }
-      else{
-        p->header.dst.u8[0] = 1;
-        p->header.dst.u8[1] = 0;
-      } 
+      else{ 
+	p->header.typ = CONFIG;
       }
       //p->header.nxh = conf.nxh_vs_sink;
       p->header.nxh = p->header.dst;
