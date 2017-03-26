@@ -63,11 +63,44 @@ create_beacon(void)
   return p;
 }
 /*----------------------------------------------------------------------------*/
+//Million modified argument from void to int
+//packet_t* 
+//create_data(void)
 packet_t* 
-create_data(void)
+create_data(int x)
 {
   // TODO 
-  return NULL;
+  //return NULL;
+  //Million A. custom create data function
+  packet_t* p = create_packet_empty();
+  if (p != NULL){
+    p->header.net = conf.my_net;
+    //Million A. dst address modified
+    //p->header.dst = conf.sink_address;
+    if(x == 0){
+	p->header.dst.u8[0] = 1;
+ 	p->header.dst.u8[1] = 0;
+    }else if(x == 1){
+        p->header.dst.u8[0] = 2;
+        p->header.dst.u8[1] = 0;
+    }else if(x == 2){
+        p->header.dst.u8[0] = 3;
+        p->header.dst.u8[1] = 0;
+    }else if(x == 3){
+        p->header.dst.u8[0] = 4;
+        p->header.dst.u8[1] = 0;
+    }else if(x == 4){
+        p->header.dst.u8[0] = 5;
+        p->header.dst.u8[1] = 0;
+    } 
+    p->header.src = conf.my_address;
+    p->header.typ = DATA;
+    p->header.nxh = conf.nxh_vs_sink;
+    set_payload_at(p, 0, 'a');
+    set_payload_at(p, 1, 'b');
+    set_payload_at(p, 3, 'c');
+  }
+  return p;
 }
 /*----------------------------------------------------------------------------*/
 packet_t* 

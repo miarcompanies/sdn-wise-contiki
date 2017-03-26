@@ -39,7 +39,9 @@
 
 /* packets API. */
   packet_t* create_beacon(void);
-  packet_t* create_data(void);
+  //Million modified function prototype from void to in
+  //packet_t* create_data(void);
+  packet_t* create_data(int);
   packet_t* create_report(void);
   packet_t* create_reg_proxy(void);
   void create_and_send_request(packet_t*);

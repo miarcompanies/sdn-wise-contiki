@@ -233,6 +233,38 @@
        //test_packet_buffer();
        //test_address_list();
        //print_node_conf();
+	//Million Added to display neighbor table and send data
+	print_neighbor_table();
+#if SINK
+	rf_unicast_send(create_data(1));
+ 	rf_unicast_send(create_data(2));
+	rf_unicast_send(create_data(3));
+ 	rf_unicast_send(create_data(4));
+#endif
+#if NODE1
+        rf_unicast_send(create_data(0));
+	rf_unicast_send(create_data(2));
+        rf_unicast_send(create_data(3));
+        rf_unicast_send(create_data(4));
+#endif
+#if NODE2
+        rf_unicast_send(create_data(0));
+	rf_unicast_send(create_data(1));
+        rf_unicast_send(create_data(3));
+        rf_unicast_send(create_data(4));
+#endif
+#if NODE3
+        rf_unicast_send(create_data(0));
+	rf_unicast_send(create_data(1));
+        rf_unicast_send(create_data(2));
+        rf_unicast_send(create_data(4));
+#endif
+#if NODE4
+        rf_unicast_send(create_data(0));
+	rf_unicast_send(create_data(1));
+        rf_unicast_send(create_data(2));
+        rf_unicast_send(create_data(3));
+#endif
         break;
 
         case UART_RECEIVE_EVENT:
@@ -357,10 +389,12 @@
     PROCESS_BEGIN();
 
     while(1) {
-      //Million slow the timer from 3 to 10
+      //Million slow the timer from 3 to 15
       //etimer_set(&et, 3 * CLOCK_SECOND);
-      etimer_set(&et, 10 * CLOCK_SECOND);
+      etimer_set(&et, 15 * CLOCK_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+      //Million reset timer to display neighbor table every 15 seconds
+      etimer_reset(&et);
       process_post(&main_proc, TIMER_EVENT, (process_data_t)NULL);
     }
     PROCESS_END();
