@@ -176,7 +176,7 @@
       p->header.src = conf.my_address;
       //p->header.typ = CONFIG;
       //set to config later
-      if(uart_buffer[0] == 64 && uart_buffer[1] == 64){ //dd for data 
+      if(uart_buffer[0] == 100 && uart_buffer[1] == 100){ //dd for data d in ascii is 100
 	p->header.typ = DATA;
         if(uart_buffer[2] == 49 || uart_buffer[3] == 49){ //'1'
         	p->header.dst.u8[0] = 2;
