@@ -175,6 +175,7 @@
       }
       p->header.src = conf.my_address;
       //p->header.typ = CONFIG;
+      //set to config later
       if(uart_buffer[0] == 64 && uart_buffer[1] == 64){ //dd for data 
 	p->header.typ = DATA;
         if(uart_buffer[2] == 49 || uart_buffer[3] == 49){ //'1'
