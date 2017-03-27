@@ -206,8 +206,8 @@
       else{ 
 	p->header.typ = CONFIG;
       }
-      //p->header.nxh = conf.nxh_vs_sink;
-      p->header.nxh = p->header.dst;
+      p->header.nxh = conf.nxh_vs_sink;
+      //p->header.nxh = p->header.dst;
       set_payload_at(p, 0, uart_buffer[0]);
       set_payload_at(p, 1, uart_buffer[1]);
       set_payload_at(p, 2, uart_buffer[2]);
