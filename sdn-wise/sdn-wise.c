@@ -206,8 +206,15 @@
       else{ 
 	p->header.typ = CONFIG;
       }
-      p->header.nxh = conf.nxh_vs_sink;
+      //p->header.nxh = conf.nxh_vs_sink;
       //p->header.nxh = p->header.dst;
+      //Million: for demo purpose we will send all config and data packets to Node 1
+#if SINK
+      p->header.nxh.u8[0] = 2;
+      p->header.nxh.u8[1] = 0; 
+#else
+      p->header.nxh = conf.nxh_vs_sink;
+#endif
       set_payload_at(p, 0, uart_buffer[0]);
       set_payload_at(p, 1, uart_buffer[1]);
       set_payload_at(p, 2, uart_buffer[2]);
