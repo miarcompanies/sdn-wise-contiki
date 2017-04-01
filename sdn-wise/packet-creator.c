@@ -113,13 +113,13 @@ create_report(void)
     p->header.src = conf.my_address; 
     p->header.typ = REPORT;
     p->header.nxh = conf.nxh_vs_sink;
-    
+/* 
     set_payload_at(p, BEACON_HOPS_INDEX, conf.hops_from_sink);
                 
     SENSORS_ACTIVATE(battery_sensor);
     set_payload_at(p, BEACON_BATT_INDEX, battery_sensor.value(0));
     SENSORS_DEACTIVATE(battery_sensor);
-
+*/
     fill_payload_with_neighbors(p);
   }
   return p;
