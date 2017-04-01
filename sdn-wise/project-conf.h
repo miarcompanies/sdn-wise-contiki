@@ -16,10 +16,10 @@
 #define DEBUG_SINK    1
 #define COOJA 1
 #define SINK 0
-#define NODE1 0
+#define NODE1 1
 #define NODE2 0
 #define NODE3 0
-#define NODE4 1 
+#define NODE4 0 
 //#define NODE5 0
 //Million Added for code optimization
 //#define NETSTACK_CONF_MAC nullmac_driver
