@@ -100,6 +100,7 @@ const void* conf_ptr[RULE_TTL+1] =
   static void handle_response(packet_t*);
   static void handle_open_path(packet_t*);
   static void handle_config(packet_t*);
+  static void handle_request(packet_t*);
 /*----------------------------------------------------------------------------*/
   void 
   handle_packet(packet_t* p)
@@ -132,8 +133,13 @@ const void* conf_ptr[RULE_TTL+1] =
             handle_config(p);
             break;
 
+            case REQUEST:
+	    PRINTF("[PHD]: Request\n");
+	    handle_request(p);
+            break;
+
             default:
-            PRINTF("[PHD]: Request/Report\n");
+            PRINTF("[PHD]: Report\n");
             handle_report(p);
             break;
           }
@@ -144,14 +150,16 @@ const void* conf_ptr[RULE_TTL+1] =
     }
   }
 /*----------------------------------------------------------------------------*/
+  
   void
   handle_beacon(packet_t* p)
   {
    //Million remove neighbor if rssi value is minimum
-   if(p->info.rssi <= 10){
+   if(p->info.rssi >= 80){
 	neighbor_t* n = neighbor_table_contains(&(p->header.src));
-	if(n != NULL)
-		neighbor_free(n); 
+	if(n != NULL){
+		purge_neighbor_table(); 
+	}
    }else 	 
    	add_neighbor(&(p->header.src),p->info.rssi);
 #if !SINK  
@@ -195,6 +203,43 @@ const void* conf_ptr[RULE_TTL+1] =
     rf_unicast_send(p);
 #endif  
   }
+
+  void
+  handle_request(packet_t* p)
+  {
+#if SINK
+      //Million Added
+      PRINTF("I got a Request, Controller Responding\n");
+      packet_t* r = create_packet_empty();
+      if (r != NULL){
+      	r->header.net = conf.my_net;
+	r->header.dst = p->header.src;
+        //r->header.dst.u8[0] = get_payload_at(p,5);
+        //r->header.dst.u8[1] = get_payload_at(p,6);
+	r->header.typ = CONFIG;
+        r->header.nxh = r->header.dst;
+        //r->header.nxh = conf.nxh_vs_sink;
+        r->header.src = conf.my_address;
+        /*if(p->payload[0] == 100 && p->payload[1] == 100){
+		set_payload_at(r, 2, 117);
+	}
+	else*/
+        set_payload_at(r, 0, get_payload_at(p,13));
+        set_payload_at(r, 1, get_payload_at(p,14));
+	set_payload_at(r, 2, 117);
+        set_payload_at(r, 3, get_payload_at(p,16));
+        set_payload_at(r, 4, get_payload_at(p,17));
+	rf_unicast_send(r);
+      }
+      print_packet_uart(p);
+
+#else
+
+    p->header.nxh = conf.nxh_vs_sink;
+    rf_unicast_send(p);
+#endif
+  }
+
 /*----------------------------------------------------------------------------*/
   void
   handle_response(packet_t* p)

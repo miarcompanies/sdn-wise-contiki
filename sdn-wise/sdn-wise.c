@@ -212,6 +212,7 @@
 #if SINK
       p->header.nxh.u8[0] = 2;
       p->header.nxh.u8[1] = 0; 
+      //p->header.nxh = p->header.dst;
 #else
       p->header.nxh = conf.nxh_vs_sink;
 #endif
