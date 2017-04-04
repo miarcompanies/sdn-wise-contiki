@@ -147,7 +147,13 @@ const void* conf_ptr[RULE_TTL+1] =
   void
   handle_beacon(packet_t* p)
   {
-    add_neighbor(&(p->header.src),p->info.rssi);
+   //Million remove neighbor if rssi value is minimum
+   if(p->info.rssi <= 10){
+	neighbor_t* n = neighbor_table_contains(&(p->header.src));
+	if(n != NULL)
+		neighbor_free(n); 
+   }else 	 
+   	add_neighbor(&(p->header.src),p->info.rssi);
 #if !SINK  
   // TODO what if the network changes?
     
