@@ -142,7 +142,8 @@ const void* conf_ptr[RULE_TTL+1] =
             PRINTF("[PHD]: Report\n");
             handle_report(p);
             break;
-          }
+          }else
+		match_packet(p);
         }
       }
     } else {
