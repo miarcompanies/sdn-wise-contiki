@@ -355,7 +355,7 @@ const void* conf_ptr[RULE_TTL+1] =
   {
     //Million Added add entry to flow table and display flow table
     if (is_my_address(&(p->header.dst))){
-	    if(p->payload[2] == 114 && p->payload[2] == 102){
+	    if(p->payload[2] == 114 && p->payload[3] == 102){
 		remove_flowtable();
 	    }
             else{

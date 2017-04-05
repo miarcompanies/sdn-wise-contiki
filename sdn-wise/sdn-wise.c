@@ -415,7 +415,6 @@
 	  uint8_t* a = (uint8_t*)p;
           packetbuf_copyfrom(a,p->header.len);
           unicast_send(&uc, &addr);
-	  PRINTF("Unicast Message Sent Successfully\n");
         } 
 #if SINK
         else {
