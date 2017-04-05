@@ -55,6 +55,8 @@
 #define BROADCAST_CONNECTION_NUMBER       30
 
 #define TIMER_EVENT       50
+//Million Dynamic Topo
+#define UPDATE_TOPO_EVENT 	  60
 #define RF_U_SEND_EVENT     51
 #define RF_B_SEND_EVENT     52
 #define RF_U_RECEIVE_EVENT    53
@@ -78,6 +80,7 @@
   PROCESS(rf_b_send_proc, "RF Broadcast Send Process");
   PROCESS(packet_handler_proc, "Packet Handler Process");
   PROCESS(timer_proc, "Timer Process");
+  PROCESS(update_topo_proc, "Update Topology Process");
   PROCESS(beacon_timer_proc, "Beacon Timer Process");
   PROCESS(report_timer_proc, "Report Timer Process");
   AUTOSTART_PROCESSES(
@@ -85,6 +88,7 @@
     &rf_u_send_proc,
     &rf_b_send_proc,
     &timer_proc,
+    &update_topo_proc,
     &beacon_timer_proc,
     &report_timer_proc,
     &packet_handler_proc
@@ -278,8 +282,20 @@
 	//Million Added to display neighbor table and send data
 	printf("Neighbor Table\n");
         print_neighbor_table();
+	reset_isalive_neighbor();
+	printf("Neighbor Table\n");
+        print_neighbor_table();
         break;
 
+        case UPDATE_TOPO_EVENT:
+ 	PRINTF("Updating Topology Neighbors\n");
+	printf("Neighbor Table\n");
+        print_neighbor_table();
+	update_topo_neighbor();
+	printf("Neighbor Table\n");
+        print_neighbor_table();
+        break;
+        
         case UART_RECEIVE_EVENT:
         leds_toggle(LEDS_GREEN);
 	PRINTF("UART Receive\n");
@@ -404,7 +420,7 @@
     while(1) {
       //Million slow the timer from 3 to 15
       //etimer_set(&et, 3 * CLOCK_SECOND);
-      etimer_set(&et, 15 * CLOCK_SECOND);
+      etimer_set(&et, 45 * CLOCK_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
       //Million reset timer to display neighbor table every 15 seconds
       etimer_reset(&et);
@@ -412,6 +428,23 @@
     }
     PROCESS_END();
   }
+
+  PROCESS_THREAD(update_topo_proc, ev, data) {
+    static struct etimer et;
+    PROCESS_BEGIN();
+
+    while(1) {
+      //Million slow the timer from 3 to 15
+      //etimer_set(&et, 3 * CLOCK_SECOND);
+      etimer_set(&et, 180 * CLOCK_SECOND);
+      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
+      //Million reset timer to display neighbor table every 15 seconds
+      etimer_reset(&et);
+      process_post(&main_proc, UPDATE_TOPO_EVENT, (process_data_t)NULL);
+    }
+    PROCESS_END();
+  }
+
 /*----------------------------------------------------------------------------*/
   PROCESS_THREAD(beacon_timer_proc, ev, data) {
     static struct etimer et;

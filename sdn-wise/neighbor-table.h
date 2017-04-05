@@ -39,10 +39,15 @@
     struct neighbor_struct *next;
     address_t address;
     uint8_t rssi;
+    uint8_t is_alive;
   } neighbor_t;
 
   /* Header API. */
-  void add_neighbor(address_t*, uint8_t rssi);
+  //void add_neighbor(address_t*, uint8_t rssi);
+  void add_neighbor(address_t*, uint8_t rssi, uint8_t is_alive);
+  void remove_neighbor(neighbor_t*);
+  void update_topo_neighbor(void);
+  void reset_isalive_neighbor(void);
   void purge_neighbor_table(void);
   void fill_payload_with_neighbors(packet_t*);
   void neighbor_table_init(void);

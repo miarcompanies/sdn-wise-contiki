@@ -15,8 +15,8 @@
 //DEBUG_SINK was 0
 #define DEBUG_SINK    1
 #define COOJA 1
-#define SINK 0
-#define NODE1 1
+#define SINK 1
+#define NODE1 0
 #define NODE2 0
 #define NODE3 0
 #define NODE4 0 

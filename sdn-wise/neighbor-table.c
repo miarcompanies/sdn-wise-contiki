@@ -56,6 +56,7 @@
   {
     print_address(&(n->address));
     PRINTF("%d",n->rssi);
+    PRINTF("%d",n->is_alive);
   }
 /*----------------------------------------------------------------------------*/
   void 
@@ -81,6 +82,29 @@
       n = next;
     }
   }
+  void reset_isalive_neighbor(void){
+    neighbor_t *n;
+    neighbor_t *next;
+
+    for(n = list_head(neighbor_table); n != NULL;) {
+      next = n->next;
+      next->is_alive = 0;
+      n = next;
+    }
+  }
+  
+  void update_topo_neighbor(void){
+    neighbor_t *n;
+    neighbor_t *next;
+    for(n = list_head(neighbor_table); n != NULL;) {
+      next = n->next;
+      n = next;
+      if(next->is_alive == 0)
+	remove_neighbor(next);
+    }
+  }
+  
+ 
 /*----------------------------------------------------------------------------*/
   static neighbor_t *
   neighbor_allocate(void)
@@ -122,7 +146,7 @@
   }
 /*----------------------------------------------------------------------------*/
   void
-  add_neighbor(address_t* address, uint8_t rssi)
+  add_neighbor(address_t* address, uint8_t rssi, uint8_t is_alive)
   {
     neighbor_t* res = neighbor_table_contains(address);
     if (res == NULL){ 
@@ -131,11 +155,18 @@
         memset(n, 0, sizeof(*n));
         n->address = *address;
         n->rssi = rssi;
+	n->is_alive = is_alive;
         list_add(neighbor_table,n);
       } 
     } else {
       res->rssi = rssi;
+      res->is_alive = is_alive;
     }  
+  }
+  
+  void remove_neighbor(neighbor_t* n){
+  	PRINTF("Removing Neighbor\n");
+	neighbor_free(n); 
   }
 /*----------------------------------------------------------------------------*/
   void
@@ -182,9 +213,9 @@
     uint8_t rssi2 = 200;
 
     if (!list_length(neighbor_table)){
-      add_neighbor(&addr1,rssi1);
-      add_neighbor(&addr2,rssi2);
-      add_neighbor(&addr3,rssi3);
+      add_neighbor(&addr1,rssi1,1);
+      add_neighbor(&addr2,rssi2,1);
+      add_neighbor(&addr3,rssi3,1);
       print_neighbor_table();
     }else{
       purge_neighbor_table();
