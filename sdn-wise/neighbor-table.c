@@ -56,7 +56,7 @@
   {
     print_address(&(n->address));
     PRINTF("%d",n->rssi);
-    PRINTF("%d",n->is_alive);
+    PRINTF(" %d",n->is_alive);
   }
 /*----------------------------------------------------------------------------*/
   void 
@@ -87,8 +87,9 @@
     neighbor_t *next;
 
     for(n = list_head(neighbor_table); n != NULL;) {
-      next = n->next;
+      next = n;
       next->is_alive = 0;
+      next = n->next;
       n = next;
     }
   }
