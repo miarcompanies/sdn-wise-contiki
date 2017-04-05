@@ -98,10 +98,11 @@
     neighbor_t *n;
     neighbor_t *next;
     for(n = list_head(neighbor_table); n != NULL;) {
-      next = n->next;
-      n = next;
+      next = n;
       if(next->is_alive == 0)
 	remove_neighbor(next);
+      next = n->next;
+      n = next;
     }
   }
   
