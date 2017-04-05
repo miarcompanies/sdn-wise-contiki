@@ -387,8 +387,10 @@ const void* conf_ptr[RULE_TTL+1] =
 		//a = create_action(FORWARD_U, &(p->payload[0]), ADDRESS_LENGTH);
 	    	a = create_action(FORWARD_U, &(addr[0]), ADDRESS_LENGTH); 
 	    }
-	    else if(p->payload[2] == 98) //'b'
+	    else if(p->payload[2] == 98){ //'b'
+		addr[0] = addr[1] = 255;
 		a = create_action(FORWARD_B, &(addr[0]), ADDRESS_LENGTH);
+	    }
 	    else if(p->payload[2] == 97) //'a'
 		a = create_action(ASK, &(addr[0]), ADDRESS_LENGTH);
 	    else
