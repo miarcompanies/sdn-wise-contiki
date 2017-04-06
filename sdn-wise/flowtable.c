@@ -353,6 +353,10 @@
       e = next;
     }
   }
+  void remove_flowtable(void){
+	purge_flowtable();
+        PRINTF("Flowtable Cleared\n");
+  }
 /*----------------------------------------------------------------------------*/
   static void
   entry_init(entry_t *e)

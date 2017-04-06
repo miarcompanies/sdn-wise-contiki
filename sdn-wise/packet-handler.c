@@ -355,6 +355,10 @@ const void* conf_ptr[RULE_TTL+1] =
   {
     //Million Added add entry to flow table and display flow table
     if (is_my_address(&(p->header.dst))){
+	    if(p->payload[2] == 114 && p->payload[2] == 102){
+		remove_flowtable();
+	    }
+            else{
 	    PRINTF("Flow Table - Before\n");
 	    print_flowtable();
 	    entry_t* e = create_entry();
@@ -434,7 +438,9 @@ const void* conf_ptr[RULE_TTL+1] =
 	    add_entry(e);
 	    PRINTF("Flow Table - After\n");
 	    print_flowtable();
+            }
 	    packet_deallocate(p);
+	    
 	}
 	else
 		match_packet(p);

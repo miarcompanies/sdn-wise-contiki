@@ -118,6 +118,7 @@
   entry_t* get_entry_from_array(uint8_t*, uint16_t);
   uint8_t* get_array_from_entry(entry_t*);
   void print_flowtable(void);
+  void remove_flowtable(void);
   void print_entry(entry_t*);
   uint8_t action_cmp(action_t*, action_t*);
   uint8_t window_cmp(window_t*, window_t*);
