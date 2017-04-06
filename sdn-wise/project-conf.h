@@ -20,7 +20,12 @@
 #define NODE2 0
 #define NODE3 0
 #define NODE4 0 
-//#define NODE5 0
+#define NODE5 0
+#define NODE6 0
+#define NODE7 0
+#define NODE8 0
+#define NODE9 0
+#define NODE10 0
 //Million Added for code optimization
 //#define NETSTACK_CONF_MAC nullmac_driver
 //#define NETSTACK_CONF_RDC nullrdc_driver

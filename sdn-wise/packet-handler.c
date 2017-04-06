@@ -361,26 +361,46 @@ const void* conf_ptr[RULE_TTL+1] =
 	    action_t* a;
 	    //Million if Node 1, 2, 3, specify address accordingly
 	    uint8_t addr[ADDRESS_LENGTH];
-	    if(p->payload[3] == 49 || p->payload[4] == 49){ //'1'
+	    if(p->payload[3] == 49 && p->payload[4] == 49){ //'1'
 	    	addr[0] = 2;
 	        addr[1] = 0;
 	    }
-	    else if(p->payload[3] == 50 || p->payload[4] == 50){ //'2'
+	    else if(p->payload[3] == 50 && p->payload[4] == 50){ //'2'
 	        addr[0] = 3;
 	        addr[1] = 0;
 	    }
-	    else if(p->payload[3] == 51 || p->payload[4] == 51){//'3'
+	    else if(p->payload[3] == 51 && p->payload[4] == 51){//'3'
 	        addr[0] = 4;
 	        addr[1] = 0;
 	    }
-	    else if(p->payload[3] == 52 || p->payload[4] == 52){//'4'
+	    else if(p->payload[3] == 52 && p->payload[4] == 52){//'4'
 	        addr[0] = 5;
 	        addr[1] = 0;
 	    }
-	    else if(p->payload[3] == 53 || p->payload[4] == 53){//'5'
+	    else if(p->payload[3] == 53 && p->payload[4] == 53){//'5'
 	        addr[0] = 6;
         	addr[1] = 0;
 	    }
+	    else if(p->payload[3] == 54 && p->payload[4] == 54){//'6'
+                addr[0] = 7;
+                addr[1] = 0;
+            }
+	    else if(p->payload[3] == 55 && p->payload[4] == 55){//'7'
+                addr[0] = 8;
+                addr[1] = 0;
+            }
+	    else if(p->payload[3] == 56 && p->payload[4] == 56){//'8'
+                addr[0] = 9;
+                addr[1] = 0;
+            }
+	    else if(p->payload[3] == 57 && p->payload[4] == 57){//'9'
+                addr[0] = 10;
+                addr[1] = 0;
+            }
+	    else if(p->payload[3] == 49 && p->payload[4] == 48){//'10'
+                addr[0] = 11;
+                addr[1] = 0;
+            }
 	    else{
 	    	addr[0] = 1;
 	        addr[1] = 0;

@@ -153,26 +153,47 @@
       packet_t* p = create_packet_empty();
       p->header.net = conf.my_net;
       //set_broadcast_address(&(p->header.dst));
-      if(uart_buffer[0] == 49 || uart_buffer[1] == 49){ //'1'
+      if(uart_buffer[0] == 49 && uart_buffer[1] == 49){ //'1'
       	p->header.dst.u8[0] = 2;
       	p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 50 || uart_buffer[1] == 50){//'2'
+      else if(uart_buffer[0] == 50 && uart_buffer[1] == 50){//'2'
 	p->header.dst.u8[0] = 3;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 51 || uart_buffer[1] == 51){ //'3'
+      else if(uart_buffer[0] == 51 && uart_buffer[1] == 51){ //'3'
         p->header.dst.u8[0] = 4;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 52 || uart_buffer[1] == 52){//'4'
+      else if(uart_buffer[0] == 52 && uart_buffer[1] == 52){//'4'
         p->header.dst.u8[0] = 5;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 53 || uart_buffer[1] == 53){//'5'
+      else if(uart_buffer[0] == 53 && uart_buffer[1] == 53){//'5'
         p->header.dst.u8[0] = 6;
         p->header.dst.u8[1] = 0;
       }
+      else if(uart_buffer[0] == 54 && uart_buffer[1] == 54){//'6'
+        p->header.dst.u8[0] = 7;
+        p->header.dst.u8[1] = 0;
+      }
+      else if(uart_buffer[0] == 55 && uart_buffer[1] == 55){//'7'
+        p->header.dst.u8[0] = 8;
+        p->header.dst.u8[1] = 0;
+      }
+      else if(uart_buffer[0] == 56 && uart_buffer[1] == 56){//'8'
+        p->header.dst.u8[0] = 9;
+        p->header.dst.u8[1] = 0;
+      }
+      else if(uart_buffer[0] == 57 && uart_buffer[1] == 57){//'9'
+        p->header.dst.u8[0] = 10;
+        p->header.dst.u8[1] = 0;
+      }
+      else if(uart_buffer[0] == 49 && uart_buffer[1] == 48){//'10'
+        p->header.dst.u8[0] = 11;
+        p->header.dst.u8[1] = 0;
+      }
+
       else{
 	p->header.dst.u8[0] = 1;
         p->header.dst.u8[1] = 0;
@@ -182,24 +203,44 @@
       //set to config later
       if(uart_buffer[0] == 100 && uart_buffer[1] == 100){ //dd for data d in ascii is 100
 	p->header.typ = DATA;
-        if(uart_buffer[2] == 49 || uart_buffer[3] == 49){ //'1'
+        if(uart_buffer[2] == 49 && uart_buffer[3] == 49){ //'11'
         	p->header.dst.u8[0] = 2;
 	        p->header.dst.u8[1] = 0;
 	}
-        else if(uart_buffer[2] == 50 || uart_buffer[3] == 50){//'2'
+        else if(uart_buffer[2] == 50 && uart_buffer[3] == 50){//'2'
           p->header.dst.u8[0] = 3;
           p->header.dst.u8[1] = 0;
         }
-        else if(uart_buffer[2] == 51 || uart_buffer[3] == 51){ //'3'
+        else if(uart_buffer[2] == 51 && uart_buffer[3] == 51){ //'3'
           p->header.dst.u8[0] = 4;
           p->header.dst.u8[1] = 0;
         }
-        else if(uart_buffer[2] == 52 || uart_buffer[3] == 52){//'4'
+        else if(uart_buffer[2] == 52 && uart_buffer[3] == 52){//'4'
           p->header.dst.u8[0] = 5;
           p->header.dst.u8[1] = 0;
         }
-        else if(uart_buffer[2] == 53 || uart_buffer[3] == 53){//'5'
+        else if(uart_buffer[2] == 53 && uart_buffer[3] == 53){//'5'
           p->header.dst.u8[0] = 6;
+          p->header.dst.u8[1] = 0;
+        }
+	else if(uart_buffer[2] == 54 && uart_buffer[3] == 54){//'6'
+          p->header.dst.u8[0] = 7;
+          p->header.dst.u8[1] = 0;
+        }
+	else if(uart_buffer[2] == 55 && uart_buffer[3] == 55){//'7'
+          p->header.dst.u8[0] = 8;
+          p->header.dst.u8[1] = 0;
+        }
+	else if(uart_buffer[2] == 56 && uart_buffer[3] == 56){//'8'
+          p->header.dst.u8[0] = 9;
+          p->header.dst.u8[1] = 0;
+        }
+	else if(uart_buffer[2] == 57 && uart_buffer[3] == 57){//'9'
+          p->header.dst.u8[0] = 10;
+          p->header.dst.u8[1] = 0;
+        }
+	else if(uart_buffer[2] == 49 && uart_buffer[3] == 48){//'10'
+          p->header.dst.u8[0] = 11;
           p->header.dst.u8[1] = 0;
         }
         else{

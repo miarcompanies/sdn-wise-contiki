@@ -144,7 +144,82 @@
 #endif
 #if NODE5
     //Million A. static adderess added NODE = 0.5
-    conf.my_address.u8[0] = 5;
+    conf.my_address.u8[0] = 6;
+    conf.my_address.u8[1] = 0;
+    conf.sink_address.u8[0] = 1;
+    conf.sink_address.u8[1] = 0;
+    conf.nxh_vs_sink = conf.sink_address;
+    //upto this are Million additions
+    conf.is_active = 0;
+    //Million commented out the next two lines, because broadcast address changes address of sink and nxh_vs_sink
+    //set_broadcast_address(&(conf.nxh_vs_sink));
+    //set_broadcast_address(&(conf.sink_address));
+    conf.hops_from_sink = _PACKET_TTL;
+    conf.rssi_from_sink = 0;
+#endif
+#if NODE6
+    //Million A. static adderess added NODE = 0.5
+    conf.my_address.u8[0] = 7;
+    conf.my_address.u8[1] = 0;
+    conf.sink_address.u8[0] = 1;
+    conf.sink_address.u8[1] = 0;
+    conf.nxh_vs_sink = conf.sink_address;
+    //upto this are Million additions
+    conf.is_active = 0;
+    //Million commented out the next two lines, because broadcast address changes address of sink and nxh_vs_sink
+    //set_broadcast_address(&(conf.nxh_vs_sink));
+    //set_broadcast_address(&(conf.sink_address));
+    conf.hops_from_sink = _PACKET_TTL;
+    conf.rssi_from_sink = 0;
+#endif
+#if NODE7
+    //Million A. static adderess added NODE = 0.5
+    conf.my_address.u8[0] = 8;
+    conf.my_address.u8[1] = 0;
+    conf.sink_address.u8[0] = 1;
+    conf.sink_address.u8[1] = 0;
+    conf.nxh_vs_sink = conf.sink_address;
+    //upto this are Million additions
+    conf.is_active = 0;
+    //Million commented out the next two lines, because broadcast address changes address of sink and nxh_vs_sink
+    //set_broadcast_address(&(conf.nxh_vs_sink));
+    //set_broadcast_address(&(conf.sink_address));
+    conf.hops_from_sink = _PACKET_TTL;
+    conf.rssi_from_sink = 0;
+#endif
+#if NODE8
+    //Million A. static adderess added NODE = 0.5
+    conf.my_address.u8[0] = 9;
+    conf.my_address.u8[1] = 0;
+    conf.sink_address.u8[0] = 1;
+    conf.sink_address.u8[1] = 0;
+    conf.nxh_vs_sink = conf.sink_address;
+    //upto this are Million additions
+    conf.is_active = 0;
+    //Million commented out the next two lines, because broadcast address changes address of sink and nxh_vs_sink
+    //set_broadcast_address(&(conf.nxh_vs_sink));
+    //set_broadcast_address(&(conf.sink_address));
+    conf.hops_from_sink = _PACKET_TTL;
+    conf.rssi_from_sink = 0;
+#endif
+#if NODE9
+    //Million A. static adderess added NODE = 0.5
+    conf.my_address.u8[0] = 10;
+    conf.my_address.u8[1] = 0;
+    conf.sink_address.u8[0] = 1;
+    conf.sink_address.u8[1] = 0;
+    conf.nxh_vs_sink = conf.sink_address;
+    //upto this are Million additions
+    conf.is_active = 0;
+    //Million commented out the next two lines, because broadcast address changes address of sink and nxh_vs_sink
+    //set_broadcast_address(&(conf.nxh_vs_sink));
+    //set_broadcast_address(&(conf.sink_address));
+    conf.hops_from_sink = _PACKET_TTL;
+    conf.rssi_from_sink = 0;
+#endif
+#if NODE10
+    //Million A. static adderess added NODE = 0.5
+    conf.my_address.u8[0] = 11;
     conf.my_address.u8[1] = 0;
     conf.sink_address.u8[0] = 1;
     conf.sink_address.u8[1] = 0;
