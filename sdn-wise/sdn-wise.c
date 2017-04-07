@@ -321,19 +321,19 @@
        //test_address_list();
        //print_node_conf();
 	//Million Added to display neighbor table and send data
-	printf("Neighbor Table\n");
+	PRINTF("Neighbor Table\n");
         print_neighbor_table();
 	reset_isalive_neighbor();
-	printf("Neighbor Table\n");
+	PRINTF("Neighbor Table\n");
         print_neighbor_table();
         break;
 
         case UPDATE_TOPO_EVENT:
  	PRINTF("Updating Topology Neighbors\n");
-	printf("Neighbor Table\n");
+	PRINTF("Neighbor Table\n");
         print_neighbor_table();
 	update_topo_neighbor();
-	printf("Neighbor Table\n");
+	PRINTF("Neighbor Table\n");
         print_neighbor_table();
         break;
         
