@@ -269,10 +269,14 @@
       //rf_broadcast_send(p);
       if (p != NULL){
         p->info.rssi = 255;
-        if(p->header.typ == DATA)
+        if(p->header.typ == DATA){
 		PRINTF("DATA packet created and passed to main process\n");
-        else
+		print_report_data();
+        }
+        else{
 		PRINTF("Configuration packet created and passed to main process\n");
+		print_report_config();
+	}
         //process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p);  
         rf_unicast_send(p);
       }
@@ -373,7 +377,9 @@
 #if !SINK
         rf_unicast_send(create_report());
 #else
+	//Million SINK dones't sends report also to controller
 	PRINTF("SINK Sending Report - To Controller(Method will be developed)\n");
+ 	send_report_to_controller(create_report());
 #endif
 	//rf_broadcast_send(create_report());
         break;
@@ -421,7 +427,8 @@
 		//Million A.
         	if(p->header.typ == REPORT)
                 	PRINTF("SINK Sending Report Packet - To Controller(Method will be developed)\n");
-		print_packet_uart(p);
+		//print_packet_uart(p);
+		send_report_to_controller(p);
 	}
 #endif
         packet_deallocate(p);

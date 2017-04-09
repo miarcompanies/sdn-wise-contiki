@@ -93,8 +93,10 @@
 
   void packet_buffer_init(void);
   void print_packet(packet_t*);
+  void send_report_to_controller(packet_t*);
   void print_packet_uart(packet_t*);
-
+  void print_report_data(void);
+  void print_report_config(void);
   void test_packet_buffer(void);
 
 #endif /* PACKET_BUFFER_H_ */

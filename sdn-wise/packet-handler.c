@@ -192,7 +192,8 @@ const void* conf_ptr[RULE_TTL+1] =
 #if SINK
       //Million Added
       PRINTF("I got a Report, Sending To Controller From Sink\n");
-      print_packet_uart(p);
+      //print_packet_uart(p);
+      send_report_to_controller(p);
 #else 
     
     p->header.nxh = conf.nxh_vs_sink;

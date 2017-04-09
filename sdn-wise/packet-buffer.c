@@ -48,6 +48,32 @@
 /*----------------------------------------------------------------------------*/
   static packet_t * packet_allocate(void);
 /*----------------------------------------------------------------------------*/
+  void print_report_data(void){
+    /*putchar(68);
+    putchar(35);
+    putchar(77);
+    putchar(105);
+    putchar(108);
+    putchar(108);
+    putchar(105);
+    putchar(111);
+    putchar(110);
+    putchar(10);*/
+    printf("D#Million: Data Command\n");
+  }
+  void print_report_config(void){
+    /*putchar(67);
+    putchar(35);
+    putchar(77);
+    putchar(105);
+    putchar(108);
+    putchar(108);
+    putchar(105);
+    putchar(111);
+    putchar(110);
+    putchar(10);*/
+    printf("C#Million: Config Command\n");
+  }
   void 
   print_packet_uart(packet_t* p)
   {
@@ -65,6 +91,29 @@
     putchar('\n');
 #endif */
     packet_deallocate(p);
+  }
+  void
+  send_report_to_controller(packet_t* p)
+  {
+	PRINTF("Inside Send_report_to_controller function\n");
+	printf("ReportTopo:\n");
+	char report[9];
+        //uint8_t len = p->payload[2];
+	uint8_t len = 3;
+	int i=0, k=0;
+        for(i=48,k=0;k<len*3;i++,k++){
+		//report[11+i] = (char)p->payload[i+3];
+		report[k] = (char)i;
+	}
+	//printf("%s", report);
+	int j = 0;
+	printf("%c",report[j]);
+	for(j=1;j<9;j++){
+		printf(",");
+		printf("%c",report[j]);
+	}
+	printf("\n");
+	packet_deallocate(p);
   }
 /*----------------------------------------------------------------------------*/
   void 
