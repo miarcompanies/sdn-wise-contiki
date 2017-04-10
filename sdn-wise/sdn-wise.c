@@ -271,11 +271,11 @@
         p->info.rssi = 255;
         if(p->header.typ == DATA){
 		PRINTF("DATA packet created and passed to main process\n");
-		print_report_data();
+		print_report_data(uart_buffer[2], uart_buffer[3], uart_buffer[4]);
         }
         else{
 		PRINTF("Configuration packet created and passed to main process\n");
-		print_report_config();
+		print_report_config(uart_buffer[0], uart_buffer[1], uart_buffer[3], uart_buffer[4]);
 	}
         //process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p);  
         rf_unicast_send(p);
@@ -380,7 +380,7 @@
 	//Million SINK dones't sends report also to controller
 	PRINTF("SINK Sending Report - To Controller(Method will be developed)\n");
  	send_report_to_controller(create_report());
-	send_request_to_controller(create_report());
+	//send_request_to_controller(create_report());
 #endif
 	//rf_broadcast_send(create_report());
         break;

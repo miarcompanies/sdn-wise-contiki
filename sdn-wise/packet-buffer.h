@@ -96,8 +96,8 @@
   void send_report_to_controller(packet_t*);
   void send_request_to_controller(packet_t*);
   void print_packet_uart(packet_t*);
-  void print_report_data(void);
-  void print_report_config(void);
+  void print_report_data(uint8_t, uint8_t, uint8_t);
+  void print_report_config(uint8_t, uint8_t, uint8_t, uint8_t);
   void test_packet_buffer(void);
 
 #endif /* PACKET_BUFFER_H_ */

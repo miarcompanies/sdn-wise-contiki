@@ -8,9 +8,13 @@ from threading import Thread
 import networkx as nx
 def readUART(Topo):
 	try:
-		ser = serial.Serial('/dev/ttyUSB0',115200)
+		ser = serial.Serial('/dev/ttyUSB3',115200)
 	        time.sleep(30)
-		prev_length = 0	
+		prev_length = []
+		length = []
+		for t in range(20):
+			prev_length.append(0)
+			length.append(0)	
 		print 'Reading  ...'
 		while 1:
 			time.sleep(3)
@@ -21,15 +25,18 @@ def readUART(Topo):
 				topoarray = map(int, topo.split(","))
 				print "Topo in Array:"
 				print topoarray
-				length = len(topoarray)
-				print length
-				if length != prev_length:
-					Topo.clear()
-					prev_length = length
+				for s in range(20): #20 nodes assumed
+					if topoarray[0] == s+1:
+						length[s] = len(topoarray)
+						print length[s]
+						if length[s] != prev_length[s]:#topology changes
+							Topo.clear()
+							prev_length[s] = length[s]
 				Topo.add_node(topoarray[0])
-				for num in range(2,length-2,3): 
+				for num in range(2,len(topoarray)-2,3): 
 					Topo.add_node(topoarray[num])
 					Topo.add_edge(topoarray[0], topoarray[num],weight=topoarray[num+2])
+					Topo.add_edge(topoarray[num], topoarray[0],weight=topoarray[num+2])
 				print Topo.nodes()
 				print Topo.edges(data=True)
 				#for (u,v,d) in Topo.edges(data=True):
@@ -40,38 +47,38 @@ def readUART(Topo):
                                 reqarray = map(int, req.split(","))
                                 print "Request in Array:"
                                 print reqarray
-				print 'Shortest Path from %d to %d: ' % (reqarray[0], reqarray[3])
+				print 'Shortest Path from %d to %d: ' % (reqarray[0], reqarray[2])
 				try:
-					shortpath =  nx.dijkstra_path(Topo,reqarray[0],reqarray[3],weight=True)
+					shortpath =  nx.dijkstra_path(Topo,reqarray[0],reqarray[2],weight=True)
 					print shortpath
 					for x in range(len(shortpath)-1):
-						unicastcommand = str(shortpath[x])
-						unicastcommand += str(shortpath[x])
+						unicastcommand = str(shortpath[x]-1)
+						unicastcommand += str(shortpath[x]-1)
 						unicastcommand += 'u'
-						unicastcommand += str(shortpath[x+1])
-						unicastcommand += str(shortpath[x+1])
-						unicastcommand += str(shortpath[x+1]) 
+						unicastcommand += str(shortpath[x+1]-1)
+						unicastcommand += str(shortpath[x+1]-1)
+						unicastcommand += str('\n') 
 						print "Unicast Command to send: "+unicastcommand
 						bauni = bytearray(unicastcommand)
                         			ser.write(bauni)
 				except Exception:
-					broadcastcommand = str(reqarray[0])
-					broadcastcommand += str(reqarray[0])
+					broadcastcommand = str(reqarray[0]-1)
+					broadcastcommand += str(reqarray[0]-1)
 					broadcastcommand += 'b'
-					broadcastcommand += str(reqarray[3])
-					broadcastcommand += str(reqarray[3]) 
-					broadcastcommand += str(reqarray[3])
+					broadcastcommand += str(reqarray[2]-1)
+					broadcastcommand += str(reqarray[2]-1) 
+					broadcastcommand += str('\n')
 					print "Broadcast Command to send: "+broadcastcommand
 					babro = bytearray(broadcastcommand)
                                         ser.write(babro)
-        				print "Node %d not reachable from %d" % (reqarray[3],reqarray[0])
+        				print "Node %d not reachable from %d" % (reqarray[2],reqarray[0])
 			else:
 				print mtype
 	except (KeyboardInterrupt):
 		sys.exit()
 def writeUART(Topo):
 	try:
-	        ser = serial.Serial('/dev/ttyUSB0',115200)
+	        ser = serial.Serial('/dev/ttyUSB3',115200)
 	        time.sleep(30)
 		#status = raw_input('Please enter your command - write Exit to quit\n')
 		print 'Please enter your command - write Exit to quit\n'
@@ -92,7 +99,7 @@ if __name__=='__main__':
 	print("Simple Python Controller for SDN-WISE Starting .....")
 	#ser = serial.Serial('/dev/ttyUSB0')
 	#time.sleep(30)
-	Topo = nx.Graph() 
+	Topo = nx.DiGraph() 
 	#Topo.add_node(1.0)
 	threadwrite = threading.Thread(target = writeUART, args = [Topo])
 	threadwrite.Daemon = True
