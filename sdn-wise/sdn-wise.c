@@ -380,6 +380,7 @@
 	//Million SINK dones't sends report also to controller
 	PRINTF("SINK Sending Report - To Controller(Method will be developed)\n");
  	send_report_to_controller(create_report());
+	send_request_to_controller(create_report());
 #endif
 	//rf_broadcast_send(create_report());
         break;
@@ -467,7 +468,7 @@
     while(1) {
       //Million slow the timer from 3 to 15
       //etimer_set(&et, 3 * CLOCK_SECOND);
-      etimer_set(&et, 25 * CLOCK_SECOND);
+      etimer_set(&et, 15 * CLOCK_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
       //Million reset timer to display neighbor table every 15 seconds
       etimer_reset(&et);
@@ -483,7 +484,7 @@
     while(1) {
       //Million slow the timer from 3 to 15
       //etimer_set(&et, 3 * CLOCK_SECOND);
-      etimer_set(&et, 80 * CLOCK_SECOND);
+      etimer_set(&et, 50 * CLOCK_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
       //Million reset timer to display neighbor table every 15 seconds
       etimer_reset(&et);

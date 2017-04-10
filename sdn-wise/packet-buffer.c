@@ -97,23 +97,42 @@
   {
 	PRINTF("Inside Send_report_to_controller function\n");
 	printf("ReportTopo:\n");
-	char report[9];
-        //uint8_t len = p->payload[2];
-	uint8_t len = 3;
-	int i=0, k=0;
-        for(i=48,k=0;k<len*3;i++,k++){
-		//report[11+i] = (char)p->payload[i+3];
-		report[k] = (char)i;
+        uint8_t len = p->payload[2];
+	uint8_t reportlen = len*3 + 2;
+	uint8_t report[reportlen]; 
+	int k=0;
+	report[0] = p->header.src.u8[0];
+	report[1] = p->header.src.u8[1];
+        for(k=2;k<reportlen;k++){
+		report[k] = p->payload[k+1];
 	}
-	//printf("%s", report);
 	int j = 0;
-	printf("%c",report[j]);
-	for(j=1;j<9;j++){
+	printf("%d",report[j]);
+	for(j=1;j<reportlen;j++){
 		printf(",");
-		printf("%c",report[j]);
+		printf("%d",report[j]);
 	}
 	printf("\n");
 	packet_deallocate(p);
+  }
+  void
+  send_request_to_controller(packet_t* p)
+  {
+        PRINTF("Inside Send_request_to_controller function\n");
+        printf("Request:\n");
+        uint8_t request[4];
+        request[0] = p->header.src.u8[0];
+        request[1] = p->header.src.u8[1];
+        request[2] = p->payload[5];
+	request[3] = p->payload[6];
+	int j=0;
+        printf("%d",request[j]);
+        for(j=1;j<4;j++){
+                printf(",");
+                printf("%d",request[j]);
+        }
+        printf("\n");
+        packet_deallocate(p);
   }
 /*----------------------------------------------------------------------------*/
   void 

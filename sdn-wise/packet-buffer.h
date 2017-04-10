@@ -94,6 +94,7 @@
   void packet_buffer_init(void);
   void print_packet(packet_t*);
   void send_report_to_controller(packet_t*);
+  void send_request_to_controller(packet_t*);
   void print_packet_uart(packet_t*);
   void print_report_data(void);
   void print_report_config(void);
