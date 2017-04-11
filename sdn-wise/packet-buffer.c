@@ -96,7 +96,7 @@
   send_report_to_controller(packet_t* p)
   {
 	PRINTF("Inside Send_report_to_controller function\n");
-	printf("ReportTopo:\n");
+	printf("Report:\n");
         uint8_t len = p->payload[2];
 	uint8_t reportlen = len*3 + 2;
 	uint8_t report[reportlen]; 
