@@ -97,6 +97,9 @@
   static uint8_t uart_buffer[UART_BUFFER_SIZE];
   static uint8_t uart_buffer_index = 0;
   static uint8_t uart_buffer_expected = 0; 
+  static uint8_t tmp_uart_buffer[5];
+  static uint8_t copy_to_tmp = 0;
+  static uint8_t tmp_index = 0;
 /*----------------------------------------------------------------------------*/
   void
   rf_unicast_send(packet_t* p)
@@ -138,58 +141,71 @@
   uart_rx_callback(unsigned char c)
   {
     // TODO works with cooja, will not work with real nodes, cause -> syn
+    if(uart_buffer_index == UART_BUFFER_SIZE)
+    	uart_buffer_index = 0;
     uart_buffer[uart_buffer_index] = c;
-    if (uart_buffer_index == LEN_INDEX){
+    //if (uart_buffer_index == LEN_INDEX){
       //Million: reduced size of expected for fast printing
       //uart_buffer_expected = c;
-      uart_buffer_expected = 6;
+      //uart_buffer_expected = 6;
+    //}
+    if(copy_to_tmp == 1 && tmp_index<5){
+        tmp_uart_buffer[tmp_index] = uart_buffer[uart_buffer_index];
+        tmp_index ++;
+    }
+    if(c == 10){
+	copy_to_tmp = 1;
+        tmp_index = 0;
     }
     uart_buffer_index++;
-    if (uart_buffer_index == uart_buffer_expected){
-      uart_buffer_index = 0;
-      uart_buffer_expected = 0;
+    if((tmp_index == 5) && ((tmp_uart_buffer[0] == 100 && tmp_uart_buffer[1] == 100) || (tmp_uart_buffer[2] == 117 || tmp_uart_buffer[2] == 98 || tmp_uart_buffer[2] == 100) || (tmp_uart_buffer[2]== 114 && tmp_uart_buffer[3] == 102) || (tmp_uart_buffer[2] == 116 && tmp_uart_buffer[4] == 114) )){ 
+	copy_to_tmp = 0;
+        tmp_index = 0;
+    //if (uart_buffer_index == uart_buffer_expected){
+       // uart_buffer_index = 0;
+       // uart_buffer_expected = 0;
       //Million: trying to create config packet
       //packet_t* p = get_packet_from_array(uart_buffer);
       packet_t* p = create_packet_empty();
       p->header.net = conf.my_net;
       //set_broadcast_address(&(p->header.dst));
-      if(uart_buffer[0] == 49 && uart_buffer[1] == 49){ //'1'
+      if(tmp_uart_buffer[0] == 49 && tmp_uart_buffer[1] == 49){ //'1'
       	p->header.dst.u8[0] = 2;
       	p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 50 && uart_buffer[1] == 50){//'2'
+      else if(tmp_uart_buffer[0] == 50 && tmp_uart_buffer[1] == 50){//'2'
 	p->header.dst.u8[0] = 3;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 51 && uart_buffer[1] == 51){ //'3'
+      else if(tmp_uart_buffer[0] == 51 && tmp_uart_buffer[1] == 51){ //'3'
         p->header.dst.u8[0] = 4;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 52 && uart_buffer[1] == 52){//'4'
+      else if(tmp_uart_buffer[0] == 52 && tmp_uart_buffer[1] == 52){//'4'
         p->header.dst.u8[0] = 5;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 53 && uart_buffer[1] == 53){//'5'
+      else if(tmp_uart_buffer[0] == 53 && tmp_uart_buffer[1] == 53){//'5'
         p->header.dst.u8[0] = 6;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 54 && uart_buffer[1] == 54){//'6'
+      else if(tmp_uart_buffer[0] == 54 && tmp_uart_buffer[1] == 54){//'6'
         p->header.dst.u8[0] = 7;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 55 && uart_buffer[1] == 55){//'7'
+      else if(tmp_uart_buffer[0] == 55 && tmp_uart_buffer[1] == 55){//'7'
         p->header.dst.u8[0] = 8;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 56 && uart_buffer[1] == 56){//'8'
+      else if(tmp_uart_buffer[0] == 56 && tmp_uart_buffer[1] == 56){//'8'
         p->header.dst.u8[0] = 9;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 57 && uart_buffer[1] == 57){//'9'
+      else if(tmp_uart_buffer[0] == 57 && tmp_uart_buffer[1] == 57){//'9'
         p->header.dst.u8[0] = 10;
         p->header.dst.u8[1] = 0;
       }
-      else if(uart_buffer[0] == 49 && uart_buffer[1] == 48){//'10'
+      else if(tmp_uart_buffer[0] == 49 && tmp_uart_buffer[1] == 48){//'10'
         p->header.dst.u8[0] = 11;
         p->header.dst.u8[1] = 0;
       }
@@ -201,45 +217,45 @@
       p->header.src = conf.my_address;
       //p->header.typ = CONFIG;
       //set to config later
-      if(uart_buffer[0] == 100 && uart_buffer[1] == 100){ //dd for data d in ascii is 100
+      if(tmp_uart_buffer[0] == 100 && tmp_uart_buffer[1] == 100){ //dd for data d in ascii is 100
 	p->header.typ = DATA;
-        if(uart_buffer[2] == 49 && uart_buffer[3] == 49){ //'11'
+        if(tmp_uart_buffer[2] == 49 && tmp_uart_buffer[3] == 49){ //'11'
         	p->header.dst.u8[0] = 2;
 	        p->header.dst.u8[1] = 0;
 	}
-        else if(uart_buffer[2] == 50 && uart_buffer[3] == 50){//'2'
+        else if(tmp_uart_buffer[2] == 50 && tmp_uart_buffer[3] == 50){//'2'
           p->header.dst.u8[0] = 3;
           p->header.dst.u8[1] = 0;
         }
-        else if(uart_buffer[2] == 51 && uart_buffer[3] == 51){ //'3'
+        else if(tmp_uart_buffer[2] == 51 && tmp_uart_buffer[3] == 51){ //'3'
           p->header.dst.u8[0] = 4;
           p->header.dst.u8[1] = 0;
         }
-        else if(uart_buffer[2] == 52 && uart_buffer[3] == 52){//'4'
+        else if(tmp_uart_buffer[2] == 52 && tmp_uart_buffer[3] == 52){//'4'
           p->header.dst.u8[0] = 5;
           p->header.dst.u8[1] = 0;
         }
-        else if(uart_buffer[2] == 53 && uart_buffer[3] == 53){//'5'
+        else if(tmp_uart_buffer[2] == 53 && tmp_uart_buffer[3] == 53){//'5'
           p->header.dst.u8[0] = 6;
           p->header.dst.u8[1] = 0;
         }
-	else if(uart_buffer[2] == 54 && uart_buffer[3] == 54){//'6'
+	else if(tmp_uart_buffer[2] == 54 && tmp_uart_buffer[3] == 54){//'6'
           p->header.dst.u8[0] = 7;
           p->header.dst.u8[1] = 0;
         }
-	else if(uart_buffer[2] == 55 && uart_buffer[3] == 55){//'7'
+	else if(tmp_uart_buffer[2] == 55 && tmp_uart_buffer[3] == 55){//'7'
           p->header.dst.u8[0] = 8;
           p->header.dst.u8[1] = 0;
         }
-	else if(uart_buffer[2] == 56 && uart_buffer[3] == 56){//'8'
+	else if(tmp_uart_buffer[2] == 56 && tmp_uart_buffer[3] == 56){//'8'
           p->header.dst.u8[0] = 9;
           p->header.dst.u8[1] = 0;
         }
-	else if(uart_buffer[2] == 57 && uart_buffer[3] == 57){//'9'
+	else if(tmp_uart_buffer[2] == 57 && tmp_uart_buffer[3] == 57){//'9'
           p->header.dst.u8[0] = 10;
           p->header.dst.u8[1] = 0;
         }
-	else if(uart_buffer[2] == 49 && uart_buffer[3] == 48){//'10'
+	else if(tmp_uart_buffer[2] == 49 && tmp_uart_buffer[3] == 48){//'10'
           p->header.dst.u8[0] = 11;
           p->header.dst.u8[1] = 0;
         }
@@ -261,19 +277,19 @@
 #else
       p->header.nxh = conf.nxh_vs_sink;
 #endif
-      set_payload_at(p, 0, uart_buffer[0]);
-      set_payload_at(p, 1, uart_buffer[1]);
-      set_payload_at(p, 2, uart_buffer[2]);
-      set_payload_at(p, 3, uart_buffer[3]);
-      set_payload_at(p, 4, uart_buffer[4]);
+      set_payload_at(p, 0, tmp_uart_buffer[0]);
+      set_payload_at(p, 1, tmp_uart_buffer[1]);
+      set_payload_at(p, 2, tmp_uart_buffer[2]);
+      set_payload_at(p, 3, tmp_uart_buffer[3]);
+      set_payload_at(p, 4, tmp_uart_buffer[4]);
       //rf_broadcast_send(p);
       if (p != NULL){
         p->info.rssi = 255;
         if(p->header.typ == DATA){
-		print_report_data(uart_buffer[2], uart_buffer[3], uart_buffer[4]);
+		print_report_data(tmp_uart_buffer[2], tmp_uart_buffer[3], tmp_uart_buffer[4]);
         }
         else{
-		print_report_config(uart_buffer[0], uart_buffer[1], uart_buffer[3], uart_buffer[4]);
+		print_report_config(tmp_uart_buffer[0], tmp_uart_buffer[1], tmp_uart_buffer[3], tmp_uart_buffer[4]);
 	}
         //process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p);  
         rf_unicast_send(p);
