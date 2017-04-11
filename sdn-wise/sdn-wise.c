@@ -468,7 +468,7 @@
     while(1) {
       //Million slow the timer from 3 to 15
       //etimer_set(&et, 3 * CLOCK_SECOND);
-      etimer_set(&et, 15 * CLOCK_SECOND);
+      etimer_set(&et, 25 * CLOCK_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
       //Million reset timer to display neighbor table every 15 seconds
       etimer_reset(&et);
