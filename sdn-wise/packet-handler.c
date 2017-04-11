@@ -356,8 +356,14 @@ const void* conf_ptr[RULE_TTL+1] =
   {
     //Million Added add entry to flow table and display flow table
     if (is_my_address(&(p->header.dst))){
-	    if(p->payload[2] == 114 && p->payload[3] == 102){
+	    if(p->payload[2] == 114 && p->payload[3] == 102){ //rf - remove flowtable
 		remove_flowtable();
+	    }
+	    else if(p->payload[2] == 116 && p->payload[3] == 102 && p->payload[4] == 114){ //tfr - turn off radio
+		NETSTACK_MAC.off();
+	    }
+	    else if(p->payload[2] == 116 && p->payload[3] == 111 && p->payload[4] == 114){ //tor - turn on radio
+		NETSTACK_MAC.on();
 	    }
             else{
 	    PRINTF("Flow Table - Before\n");
