@@ -270,11 +270,9 @@
       if (p != NULL){
         p->info.rssi = 255;
         if(p->header.typ == DATA){
-		PRINTF("DATA packet created and passed to main process\n");
 		print_report_data(uart_buffer[2], uart_buffer[3], uart_buffer[4]);
         }
         else{
-		PRINTF("Configuration packet created and passed to main process\n");
 		print_report_config(uart_buffer[0], uart_buffer[1], uart_buffer[3], uart_buffer[4]);
 	}
         //process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p);  
@@ -533,7 +531,6 @@
     while(1) {
       PROCESS_WAIT_EVENT_UNTIL(ev == NEW_PACKET_EVENT);
       packet_t* p = (packet_t*)data;
-      PRINTF("New Packet Arrived in Packet Handler\n");
       PRINTF("[RX]: ");
       print_packet(p);
       PRINTF("\n");

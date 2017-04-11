@@ -360,10 +360,12 @@ const void* conf_ptr[RULE_TTL+1] =
 		remove_flowtable();
 	    }
 	    else if(p->payload[2] == 116 && p->payload[3] == 102 && p->payload[4] == 114){ //tfr - turn off radio
-		NETSTACK_MAC.off();
+		NETSTACK_MAC.off(1);
+		PRINTF("Radio Turned Off\n");
 	    }
 	    else if(p->payload[2] == 116 && p->payload[3] == 111 && p->payload[4] == 114){ //tor - turn on radio
 		NETSTACK_MAC.on();
+		PRINTF("Radio Turned On\n");
 	    }
             else{
 	    PRINTF("Flow Table - Before\n");
