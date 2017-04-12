@@ -263,44 +263,48 @@
           p->header.dst.u8[0] = 1;
           p->header.dst.u8[1] = 0;
        }
-       if(tmp_uart_buffer[1] == 49 && tmp_uart_buffer[2] == 49){//'11'
+       if(tmp_uart_buffer[1] == 48 && tmp_uart_buffer[2] == 48){//'00'
           p->header.src.u8[0] = 1;
+          p->header.src.u8[1] = 0;
+       }
+       else if(tmp_uart_buffer[1] == 49 && tmp_uart_buffer[2] == 49){//'11'
+          p->header.src.u8[0] = 2;
           p->header.src.u8[1] = 0;
        } 
        else if(tmp_uart_buffer[1] == 50 && tmp_uart_buffer[2] == 50){//'22'
-          p->header.src.u8[0] = 2;
-          p->header.src.u8[1] = 0;
-        }
-	else if(tmp_uart_buffer[1] == 51 && tmp_uart_buffer[2] == 51){//'33'
           p->header.src.u8[0] = 3;
           p->header.src.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[1] == 52 && tmp_uart_buffer[2] == 52){//'44'
+	else if(tmp_uart_buffer[1] == 51 && tmp_uart_buffer[2] == 51){//'33'
           p->header.src.u8[0] = 4;
           p->header.src.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[1] == 53 && tmp_uart_buffer[2] == 53){//'55'
+	else if(tmp_uart_buffer[1] == 52 && tmp_uart_buffer[2] == 52){//'44'
           p->header.src.u8[0] = 5;
           p->header.src.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[1] == 54 && tmp_uart_buffer[2] == 54){//'66'
+	else if(tmp_uart_buffer[1] == 53 && tmp_uart_buffer[2] == 53){//'55'
           p->header.src.u8[0] = 6;
           p->header.src.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[1] == 55 && tmp_uart_buffer[2] == 56){//'77'
+	else if(tmp_uart_buffer[1] == 54 && tmp_uart_buffer[2] == 54){//'66'
           p->header.src.u8[0] = 7;
           p->header.src.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[1] == 56 && tmp_uart_buffer[2] == 57){//'88'
+	else if(tmp_uart_buffer[1] == 55 && tmp_uart_buffer[2] == 56){//'77'
           p->header.src.u8[0] = 8;
           p->header.src.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[1] == 57 && tmp_uart_buffer[2] == 57){//'99'
+	else if(tmp_uart_buffer[1] == 56 && tmp_uart_buffer[2] == 57){//'88'
           p->header.src.u8[0] = 9;
           p->header.src.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[1] == 49 && tmp_uart_buffer[2] == 50){//'10'
+	else if(tmp_uart_buffer[1] == 57 && tmp_uart_buffer[2] == 57){//'99'
           p->header.src.u8[0] = 10;
+          p->header.src.u8[1] = 0;
+        }
+	else if(tmp_uart_buffer[1] == 49 && tmp_uart_buffer[2] == 50){//'10'
+          p->header.src.u8[0] = 11;
           p->header.src.u8[1] = 0;
         }
       }
