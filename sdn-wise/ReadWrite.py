@@ -8,7 +8,7 @@ from threading import Thread
 import networkx as nx
 def readUART(Topo):
 	try:
-		ser = serial.Serial('/dev/ttyUSB6',115200)
+		ser = serial.Serial('/dev/ttyUSB0',115200)
 	        time.sleep(30)
 		prev_length = []
 		length = []
@@ -17,7 +17,7 @@ def readUART(Topo):
 			length.append(0)	
 		print 'Reading  ...'
 		while 1:
-			time.sleep(3)
+			#time.sleep(3)
 			mtype = ser.readline()
 			if 'Report' in mtype:
 				topo = ser.readline()
@@ -78,13 +78,13 @@ def readUART(Topo):
 		sys.exit()
 def writeUART(Topo):
 	try:
-	        ser = serial.Serial('/dev/ttyUSB6',115200)
+	        ser = serial.Serial('/dev/ttyUSB0',115200)
 	        time.sleep(30)
 		#status = raw_input('Please enter your command - write Exit to quit\n')
 		print 'Please enter your command - write Exit to quit\n'
 		status = sys.stdin.readline() 
 		while 1:
-        		ba = bytearray(status)
+	       		ba = bytearray(status)
 	        	ser.write(ba)
 	        	if status == 'Exit':
         	        	ser.close()
@@ -97,13 +97,11 @@ def writeUART(Topo):
                 sys.exit()
 if __name__=='__main__':
 	print("Simple Python Controller for SDN-WISE Starting .....")
-	#ser = serial.Serial('/dev/ttyUSB0')
-	#time.sleep(30)
-	Topo = nx.DiGraph() 
-	#Topo.add_node(1.0)
+	Topo = nx.DiGraph()
 	threadwrite = threading.Thread(target = writeUART, args = [Topo])
 	threadwrite.Daemon = True
 	threadwrite.start()
 	threadread = threading.Thread(target = readUART, args = [Topo])
 	threadread.Daemon = True
 	threadread.start()
+

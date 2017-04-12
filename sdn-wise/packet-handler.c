@@ -364,7 +364,7 @@ const void* conf_ptr[RULE_TTL+1] =
 		print_flowtable();
             }
 	    else if(p->payload[2] == 116 && p->payload[3] == 102 && p->payload[4] == 114){ //tfr - turn off radio
-		NETSTACK_MAC.off(1);
+		NETSTACK_MAC.off(0);
 		PRINTF("Radio Turned Off\n");
 	    }
 	    else if(p->payload[2] == 116 && p->payload[3] == 111 && p->payload[4] == 114){ //tor - turn on radio
