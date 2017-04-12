@@ -158,7 +158,7 @@
         tmp_index = 0;
     }
     uart_buffer_index++;
-    if((tmp_index == 5) && ((tmp_uart_buffer[0] == 100 && tmp_uart_buffer[1] == 100) || (tmp_uart_buffer[2] == 117 || tmp_uart_buffer[2] == 98 || tmp_uart_buffer[2] == 100) || (tmp_uart_buffer[2]== 114 && tmp_uart_buffer[3] == 102) || (tmp_uart_buffer[2] == 116 && tmp_uart_buffer[4] == 114) )){ 
+    if((tmp_index == 5) && ((tmp_uart_buffer[0] == 100) || (tmp_uart_buffer[2] == 117 || tmp_uart_buffer[2] == 98 || tmp_uart_buffer[2] == 100) || (tmp_uart_buffer[2]== 114 && tmp_uart_buffer[3] == 102) || (tmp_uart_buffer[2] == 116 && tmp_uart_buffer[4] == 114) )){ 
 	copy_to_tmp = 0;
         tmp_index = 0;
     //if (uart_buffer_index == uart_buffer_expected){
@@ -217,52 +217,92 @@
       p->header.src = conf.my_address;
       //p->header.typ = CONFIG;
       //set to config later
-      if(tmp_uart_buffer[0] == 100 && tmp_uart_buffer[1] == 100){ //dd for data d in ascii is 100
+      if(tmp_uart_buffer[0] == 100){ //dd for data d in ascii is 100
 	p->header.typ = DATA;
-        if(tmp_uart_buffer[2] == 49 && tmp_uart_buffer[3] == 49){ //'11'
+        if(tmp_uart_buffer[3] == 49 && tmp_uart_buffer[4] == 49){ //'11'
         	p->header.dst.u8[0] = 2;
 	        p->header.dst.u8[1] = 0;
 	}
-        else if(tmp_uart_buffer[2] == 50 && tmp_uart_buffer[3] == 50){//'2'
+        else if(tmp_uart_buffer[3] == 50 && tmp_uart_buffer[4] == 50){//'2'
           p->header.dst.u8[0] = 3;
           p->header.dst.u8[1] = 0;
         }
-        else if(tmp_uart_buffer[2] == 51 && tmp_uart_buffer[3] == 51){ //'3'
+        else if(tmp_uart_buffer[3] == 51 && tmp_uart_buffer[4] == 51){ //'3'
           p->header.dst.u8[0] = 4;
           p->header.dst.u8[1] = 0;
         }
-        else if(tmp_uart_buffer[2] == 52 && tmp_uart_buffer[3] == 52){//'4'
+        else if(tmp_uart_buffer[3] == 52 && tmp_uart_buffer[4] == 52){//'4'
           p->header.dst.u8[0] = 5;
           p->header.dst.u8[1] = 0;
         }
-        else if(tmp_uart_buffer[2] == 53 && tmp_uart_buffer[3] == 53){//'5'
+        else if(tmp_uart_buffer[3] == 53 && tmp_uart_buffer[4] == 53){//'5'
           p->header.dst.u8[0] = 6;
           p->header.dst.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[2] == 54 && tmp_uart_buffer[3] == 54){//'6'
+	else if(tmp_uart_buffer[3] == 54 && tmp_uart_buffer[4] == 54){//'6'
           p->header.dst.u8[0] = 7;
           p->header.dst.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[2] == 55 && tmp_uart_buffer[3] == 55){//'7'
+	else if(tmp_uart_buffer[3] == 55 && tmp_uart_buffer[4] == 55){//'7'
           p->header.dst.u8[0] = 8;
           p->header.dst.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[2] == 56 && tmp_uart_buffer[3] == 56){//'8'
+	else if(tmp_uart_buffer[3] == 56 && tmp_uart_buffer[4] == 56){//'8'
           p->header.dst.u8[0] = 9;
           p->header.dst.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[2] == 57 && tmp_uart_buffer[3] == 57){//'9'
+	else if(tmp_uart_buffer[3] == 57 && tmp_uart_buffer[4] == 57){//'9'
           p->header.dst.u8[0] = 10;
           p->header.dst.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[2] == 49 && tmp_uart_buffer[3] == 48){//'10'
+	else if(tmp_uart_buffer[3] == 49 && tmp_uart_buffer[4] == 48){//'10'
           p->header.dst.u8[0] = 11;
           p->header.dst.u8[1] = 0;
         }
         else{
           p->header.dst.u8[0] = 1;
           p->header.dst.u8[1] = 0;
+       }
+       if(tmp_uart_buffer[1] == 49 && tmp_uart_buffer[2] == 49){//'11'
+          p->header.src.u8[0] = 1;
+          p->header.src.u8[1] = 0;
        } 
+       else if(tmp_uart_buffer[1] == 50 && tmp_uart_buffer[2] == 50){//'22'
+          p->header.src.u8[0] = 2;
+          p->header.src.u8[1] = 0;
+        }
+	else if(tmp_uart_buffer[1] == 51 && tmp_uart_buffer[2] == 51){//'33'
+          p->header.src.u8[0] = 3;
+          p->header.src.u8[1] = 0;
+        }
+	else if(tmp_uart_buffer[1] == 52 && tmp_uart_buffer[2] == 52){//'44'
+          p->header.src.u8[0] = 4;
+          p->header.src.u8[1] = 0;
+        }
+	else if(tmp_uart_buffer[1] == 53 && tmp_uart_buffer[2] == 53){//'55'
+          p->header.src.u8[0] = 5;
+          p->header.src.u8[1] = 0;
+        }
+	else if(tmp_uart_buffer[1] == 54 && tmp_uart_buffer[2] == 54){//'66'
+          p->header.src.u8[0] = 6;
+          p->header.src.u8[1] = 0;
+        }
+	else if(tmp_uart_buffer[1] == 55 && tmp_uart_buffer[2] == 56){//'77'
+          p->header.src.u8[0] = 7;
+          p->header.src.u8[1] = 0;
+        }
+	else if(tmp_uart_buffer[1] == 56 && tmp_uart_buffer[2] == 57){//'88'
+          p->header.src.u8[0] = 8;
+          p->header.src.u8[1] = 0;
+        }
+	else if(tmp_uart_buffer[1] == 57 && tmp_uart_buffer[2] == 57){//'99'
+          p->header.src.u8[0] = 9;
+          p->header.src.u8[1] = 0;
+        }
+	else if(tmp_uart_buffer[1] == 49 && tmp_uart_buffer[2] == 50){//'10'
+          p->header.src.u8[0] = 10;
+          p->header.src.u8[1] = 0;
+        }
       }
       else{ 
 	p->header.typ = CONFIG;
@@ -286,7 +326,7 @@
       if (p != NULL){
         p->info.rssi = 255;
         if(p->header.typ == DATA){
-		print_report_data(tmp_uart_buffer[2], tmp_uart_buffer[3], tmp_uart_buffer[4]);
+		print_report_data(tmp_uart_buffer[1], tmp_uart_buffer[2], tmp_uart_buffer[3], tmp_uart_buffer[4]);
         }
         else{
 		print_report_config(tmp_uart_buffer[0], tmp_uart_buffer[1], tmp_uart_buffer[3], tmp_uart_buffer[4]);

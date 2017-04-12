@@ -48,7 +48,7 @@
 /*----------------------------------------------------------------------------*/
   static packet_t * packet_allocate(void);
 /*----------------------------------------------------------------------------*/
-  void print_report_data(uint8_t a, uint8_t b, uint8_t c){
+  void print_report_data(uint8_t a, uint8_t b, uint8_t c, uint8_t d){
     /*putchar(68);
     putchar(35);
     putchar(77);
@@ -59,7 +59,7 @@
     putchar(111);
     putchar(110);
     putchar(10);*/
-    printf("D#Million: Data Command dd%u%u%u\n", a,b,c);
+    printf("D#Million: Data Command d%u%u%u%u\n", a,b,c,d);
   }
   void print_report_config(uint8_t a, uint8_t b, uint8_t c, uint8_t d){
     /*putchar(67);
