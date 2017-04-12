@@ -401,7 +401,6 @@
         
         case UART_RECEIVE_EVENT:
         leds_toggle(LEDS_GREEN);
-	PRINTF("UART Receive\n");
         //process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
 	//packet_t* p = (packet_t*)data;
         //rf_unicast_send(p);
@@ -409,7 +408,6 @@
 
         case RF_B_RECEIVE_EVENT:
         leds_toggle(LEDS_YELLOW);
-	PRINTF("Broadcast Packet Receive\n");
         if (!conf.is_active){
           conf.is_active = 1;
           process_post(&beacon_timer_proc, ACTIVATE_EVENT, (process_data_t)NULL);
@@ -418,8 +416,6 @@
  	//Million I suggest to have break
         //break;
         case RF_U_RECEIVE_EVENT:
-	//Million added
-	PRINTF("Unicast Packet Receive\n");
         process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
         break;
 
