@@ -56,4 +56,5 @@
 #include "sys/energest.h"
 //Million
 #include "net/mac/contikimac/contikimac.h"
+#include "net/netstack.h"
 #endif /* CONTIKI_H_ */
