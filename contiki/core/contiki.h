@@ -54,5 +54,6 @@
 #include "sys/clock.h"
 
 #include "sys/energest.h"
-
+//Million
+#include "net/mac/contikimac/contikimac.h"
 #endif /* CONTIKI_H_ */
