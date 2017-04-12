@@ -360,7 +360,7 @@ const void* conf_ptr[RULE_TTL+1] =
 		remove_flowtable();
 	    }
 	    else if(p->payload[2] == 115 && p->payload[3] == 102){ //sf - show flowtable
-                PRINTF("FlowTable\n");
+                PRINTF("Flow Table\n");
 		print_flowtable();
             }
 	    else if(p->payload[2] == 116 && p->payload[3] == 102 && p->payload[4] == 114){ //tfr - turn off radio

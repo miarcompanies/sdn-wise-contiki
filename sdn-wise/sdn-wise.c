@@ -158,7 +158,7 @@
         tmp_index = 0;
     }
     uart_buffer_index++;
-    if((tmp_index == 5) && ((tmp_uart_buffer[0] == 100) || (tmp_uart_buffer[2] == 117 || tmp_uart_buffer[2] == 98 || tmp_uart_buffer[2] == 100) || (tmp_uart_buffer[2]== 114 && tmp_uart_buffer[3] == 102) || (tmp_uart_buffer[2] == 116 && tmp_uart_buffer[4] == 114) )){ 
+    if((tmp_index == 5) && ((tmp_uart_buffer[0] == 100) || (tmp_uart_buffer[2] == 117 || tmp_uart_buffer[2] == 98 || tmp_uart_buffer[2] == 100) || (tmp_uart_buffer[2]== 114 && tmp_uart_buffer[3] == 102) || (tmp_uart_buffer[2]== 115 && tmp_uart_buffer[3] == 102) || (tmp_uart_buffer[2] == 116 && tmp_uart_buffer[4] == 114) )){ 
 	copy_to_tmp = 0;
         tmp_index = 0;
     //if (uart_buffer_index == uart_buffer_expected){
