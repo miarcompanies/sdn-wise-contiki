@@ -314,13 +314,15 @@
       //p->header.nxh = conf.nxh_vs_sink;
       //p->header.nxh = p->header.dst;
       //Million: for demo purpose we will send all config and data packets to Node 1
-#if SINK
+/*#if SINK
       p->header.nxh.u8[0] = 2;
       p->header.nxh.u8[1] = 0; 
       //p->header.nxh = p->header.dst;
 #else
       p->header.nxh = conf.nxh_vs_sink;
-#endif
+#endif*/
+      address_t tmp  = nearest_neighbor();
+      p->header.nxh = tmp;
       set_payload_at(p, 0, tmp_uart_buffer[0]);
       set_payload_at(p, 1, tmp_uart_buffer[1]);
       set_payload_at(p, 2, tmp_uart_buffer[2]);

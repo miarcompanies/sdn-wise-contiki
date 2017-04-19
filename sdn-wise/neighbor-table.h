@@ -55,5 +55,6 @@
   void test_neighbor_table(void);
   neighbor_t* neighbor_table_contains(address_t*);
   uint8_t neighbor_cmp(neighbor_t*, neighbor_t*);
+  address_t nearest_neighbor();
 #endif /* NEIGHBOR_TABLE_H_ */
 /** @} */
