@@ -110,7 +110,6 @@
 	neighbor_t *n;
 	n = list_head(neighbor_table);
 	neighbor_t *nearest = n;
-	n = n->next;
 	for(; n != NULL;n=n->next) {
 		if(n->rssi < nearest->rssi)
 			nearest = n;
