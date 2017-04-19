@@ -325,11 +325,12 @@
 #else
       p->header.nxh = conf.nxh_vs_sink;
 #endif*/
-      address_t tmp  = nearest_neighbor();
-      p->header.nxh = tmp;
-      neighbor_t* tmp_neighbor = neighbor_table_contains(&p->header.dst);
-      if(tmp_neighbor != NULL)     
-      	p->header.nxh = p->header.dst;
+      p->header.nxh = conf.my_address;
+      //address_t tmp  = nearest_neighbor();
+      //p->header.nxh = tmp;
+      //neighbor_t* tmp_neighbor = neighbor_table_contains(&p->header.dst);
+      //if(tmp_neighbor != NULL)     
+      //p->header.nxh = p->header.dst;
       set_payload_at(p, 0, tmp_uart_buffer[0]);
       set_payload_at(p, 1, tmp_uart_buffer[1]);
       set_payload_at(p, 2, tmp_uart_buffer[2]);
@@ -344,8 +345,8 @@
         else{
 		print_report_config(tmp_uart_buffer[0], tmp_uart_buffer[1], tmp_uart_buffer[3], tmp_uart_buffer[4]);
 	}
-        //process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p);  
-        rf_unicast_send(p);
+        process_post(&main_proc, UART_RECEIVE_EVENT, (process_data_t)p);  
+        //rf_unicast_send(p);
       }
     }
     return 0;
@@ -410,7 +411,7 @@
         
         case UART_RECEIVE_EVENT:
         leds_toggle(LEDS_GREEN);
-        //process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
+        process_post(&packet_handler_proc, NEW_PACKET_EVENT, (process_data_t)data);
 	//packet_t* p = (packet_t*)data;
         //rf_unicast_send(p);
         break;
