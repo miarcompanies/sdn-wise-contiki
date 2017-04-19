@@ -323,6 +323,9 @@
 #endif*/
       address_t tmp  = nearest_neighbor();
       p->header.nxh = tmp;
+      neighbor_t* tmp_neighbor = neighbor_table_contains(&p->header.dst);
+      if(tmp_neighbor != NULL)     
+      	p->header.nxh = p->header.dst;
       set_payload_at(p, 0, tmp_uart_buffer[0]);
       set_payload_at(p, 1, tmp_uart_buffer[1]);
       set_payload_at(p, 2, tmp_uart_buffer[2]);
