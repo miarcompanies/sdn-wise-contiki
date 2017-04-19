@@ -168,7 +168,14 @@ create_and_send_request(packet_t* p)
       for (i = 0; i < (p->header.len); ++i){
         set_payload_at(r, i+3, a[i]);
       }
+#if SINK
+	PRINTF("[RX]: ");
+	print_packet(r);
+	PRINTF("\n");
+	handle_packet(r);
+#else
     rf_unicast_send(r);
+#endif
     conf.requests_count++;
 
     }
@@ -205,10 +212,15 @@ create_and_send_request(packet_t* p)
       for (i = 0; i < (p->header.len - MAX_PAYLOAD_LENGTH); ++i){
         set_payload_at(r2, i+3, a[i + MAX_PAYLOAD_LENGTH]);
       }
-
-      rf_unicast_send(r1);
-      rf_unicast_send(r2);
-
+#if SINK
+        PRINTF("[RX]: ");
+        print_packet(r);
+        PRINTF("\n");
+        handle_packet(r);
+#else
+	rf_unicast_send(r1);
+	rf_unicast_send(r2);
+#endif
       conf.requests_count++;
     } else {
       if (r1 == NULL){
