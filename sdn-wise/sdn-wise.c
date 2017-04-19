@@ -219,7 +219,11 @@
       //set to config later
       if(tmp_uart_buffer[0] == 100){ //dd for data d in ascii is 100
 	p->header.typ = DATA;
-        if(tmp_uart_buffer[3] == 49 && tmp_uart_buffer[4] == 49){ //'11'
+	if(tmp_uart_buffer[3] == 48 && tmp_uart_buffer[4] == 48){ //'00'
+	        p->header.dst.u8[0] = 1;
+		p->header.dst.u8[1] = 0;
+	}
+        else if(tmp_uart_buffer[3] == 49 && tmp_uart_buffer[4] == 49){ //'11'
         	p->header.dst.u8[0] = 2;
 	        p->header.dst.u8[1] = 0;
 	}
