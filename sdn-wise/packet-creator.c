@@ -169,15 +169,14 @@ create_and_send_request(packet_t* p)
         set_payload_at(r, i+3, a[i]);
       }
 #if SINK
-	PRINTF("Request From Sink To Sink [RX]: ");
-	print_packet(r);
-	PRINTF("\n");
-	handle_packet(r);
+    PRINTF("Request From Sink To Sink [RX]: "); 
+    print_packet(r);
+    PRINTF("\n");
+    handle_packet(r);
 #else
     rf_unicast_send(r);
 #endif
     conf.requests_count++;
-
     }
   } else {   
     packet_t* r1 = create_packet_empty();
@@ -213,10 +212,14 @@ create_and_send_request(packet_t* p)
         set_payload_at(r2, i+3, a[i + MAX_PAYLOAD_LENGTH]);
       }
 #if SINK
-        PRINTF("[RX]: ");
-        print_packet(r);
+        PRINTF("Request From Sink To Sink[RX]: ");
+        print_packet(r1);
         PRINTF("\n");
-        handle_packet(r);
+        handle_packet(r1);
+	 PRINTF("Request From Sink To Sink[RX]: ");
+         print_packet(r2);
+         PRINTF("\n");
+         handle_packet(r2);
 #else
 	rf_unicast_send(r1);
 	rf_unicast_send(r2);
