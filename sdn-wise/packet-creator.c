@@ -35,7 +35,7 @@
 #include "address.h"
 #include "neighbor-table.h"
 #include "sdn-wise.h"
-
+#include "packet-handler.h"
 #define DEBUG 1
 #if DEBUG && (!SINK || DEBUG_SINK)
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -169,7 +169,7 @@ create_and_send_request(packet_t* p)
         set_payload_at(r, i+3, a[i]);
       }
 #if SINK
-	PRINTF("[RX]: ");
+	PRINTF("Request From Sink To Sink [RX]: ");
 	print_packet(r);
 	PRINTF("\n");
 	handle_packet(r);
