@@ -39,7 +39,7 @@
 #include "flowtable.h"
 #include "node-conf.h"
 #include "sdn-wise.h"
-
+#include "net/rime/rime.h"
 typedef enum conf_id{
   RESET,
   MY_NET,
@@ -179,6 +179,7 @@ const void* conf_ptr[RULE_TTL+1] =
   {
     if (is_my_address(&(p->header.dst)))
     {     
+      PRINTF("Data Pkt %d Received at: %lu\n", p->payload[5], (timesynch_time()/CLOCK_SECOND));
       PRINTF("[PHD]: Consuming Packet\n");
       packet_deallocate(p);
     } else {

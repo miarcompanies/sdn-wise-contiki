@@ -29,6 +29,8 @@
 
 #include "contiki.h"
 #include "net/rime/rime.h"
+//timesynch
+#include "net/rime/timesynch.h"
 #include "net/linkaddr.h"  
 #include "dev/watchdog.h"
 //#include "dev/uart1.h"
@@ -100,6 +102,7 @@
   static uint8_t tmp_uart_buffer[5];
   static uint8_t copy_to_tmp = 0;
   static uint8_t tmp_index = 0;
+  uint8_t packet_counter = 0;
 /*----------------------------------------------------------------------------*/
   void
   rf_unicast_send(packet_t* p)
@@ -340,7 +343,10 @@
       if (p != NULL){
         p->info.rssi = 255;
         if(p->header.typ == DATA){
+		PRINTF("Data Pkt %d Sent at: %lu, in rtime form %u\n", packet_counter, (timesynch_time()/CLOCK_SECOND), timesynch_time_to_rtimer(timesynch_time())); //%lu
+		set_payload_at(p, 5, packet_counter);
 		print_report_data(tmp_uart_buffer[1], tmp_uart_buffer[2], tmp_uart_buffer[3], tmp_uart_buffer[4]);
+		packet_counter++;
         }
         else{
 		print_report_config(tmp_uart_buffer[0], tmp_uart_buffer[1], tmp_uart_buffer[3], tmp_uart_buffer[4]);
@@ -369,7 +375,14 @@
 
     uart0_init(BAUD2UBR(115200));       /* set the baud rate as necessary */
     uart0_set_input(uart_rx_callback);  /* set the callback function */
-
+    
+    //Million time synch
+    timesynch_init();
+#if SINK
+    timesynch_set_authority_level(0);
+#else
+    timesynch_set_authority_level(1);
+#endif
     node_conf_init();
     flowtable_init();
     packet_buffer_init();
@@ -432,6 +445,7 @@
         case RF_SEND_BEACON_EVENT:
         leds_toggle(LEDS_RED);
 	PRINTF("Beacon Send\n");
+	PRINTF("Synchronized Timer: %lu, rtimer format %u\n", (timesynch_time()/CLOCK_SECOND), timesynch_time_to_rtimer(timesynch_time())); //%lu
         rf_broadcast_send(create_beacon());
         break;
 
