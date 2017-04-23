@@ -142,6 +142,7 @@ broadcast_recv(struct broadcast_conn *c, const linkaddr_t *from)
                   packetbuf_attr(PACKETBUF_ATTR_TIMESTAMP));
     timesynch_set_authority_level(msg.authority_level + 1);
   }
+  printf("broadcast_recv, timesynch_offset = %lu timesynch_authority_level = %d \n\r", (timesynch_offset()/CLOCK_SECOND), timesynch_authority_level());
 }
 static const struct broadcast_callbacks broadcast_call = {broadcast_recv};
 static struct broadcast_conn broadcast;

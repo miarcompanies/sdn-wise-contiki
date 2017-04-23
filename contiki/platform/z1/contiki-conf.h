@@ -117,6 +117,17 @@
 #ifndef QUEUEBUF_CONF_NUM
 #define QUEUEBUF_CONF_NUM                    8
 #endif
+//Million TimeSynch
+#ifndef TIMESYNCH_CONF_ENABLED
+#define TIMESYNCH_CONF_ENABLED           1
+#endif /* TIMESYNCH_CONF_ENABLED */
+
+#if TIMESYNCH_CONF_ENABLED
+/* CC2420 SDF timestamps must be on if timesynch is enabled. */
+#undef CC2420_CONF_SFD_TIMESTAMPS
+#define CC2420_CONF_SFD_TIMESTAMPS       1
+#endif /* TIMESYNCH_CONF_ENABLED */
+
 
 #endif /* NETSTACK_CONF_WITH_IPV6 */
 
