@@ -29,8 +29,6 @@
 
 #include "contiki.h"
 #include "net/rime/rime.h"
-//timesynch
-#include "net/rime/timesynch.h"
 #include "net/linkaddr.h"  
 #include "dev/watchdog.h"
 //#include "dev/uart1.h"
@@ -349,10 +347,7 @@
       if (p != NULL){
         p->info.rssi = 255;
         if(p->header.typ == DATA){
-		//PRINTF("Data Pkt %d Sent at: %"PRIu32" \n", packet_counter, timesynch_time()); //%lu
-		PRINTF("Data Pkt %d Sent at: %lu \n", packet_counter, (unsigned long)timesynch_time()); //%lu
 		set_payload_at(p, 5, packet_counter);
-		set_payload_at(p, 6, timesynch_time());
 		print_report_data(tmp_uart_buffer[1], tmp_uart_buffer[2], tmp_uart_buffer[3], tmp_uart_buffer[4]);
 		packet_counter++;
         }
@@ -383,11 +378,7 @@
 
     uart0_init(BAUD2UBR(115200));       /* set the baud rate as necessary */
     uart0_set_input(uart_rx_callback);  /* set the callback function */
-    //Million time synch
-    timesynch_init();
-#if SINK
-    timesynch_set_authority_level(0);
-#endif
+    
     node_conf_init();
     flowtable_init();
     packet_buffer_init();
@@ -448,11 +439,7 @@
 
         case RF_SEND_BEACON_EVENT:
         leds_toggle(LEDS_RED);
-	PRINTF("Beacon Send\n");
-	//PRINTF("Synchronized Timer: %"PRIu32" %"PRIu32" %"PRIu32"\n", timesynch_time(), RTIMER_NOW(), (1000L *timesynch_time()) / RTIMER_ARCH_SECOND); //%lu
-	PRINTF("Synchronized Timer: %lu %lu %lu\n", (unsigned long)timesynch_time(), (unsigned long)RTIMER_NOW(), (unsigned long)(1000L *timesynch_time()) / RTIMER_ARCH_SECOND); //%lu
-	PRINTF("Clock_time: %lu / %lu Clock_second: %lu\n", (unsigned long)clock_time(), CLOCK_SECOND, clock_seconds());
-	//PRINTF("Synchronized Timer: %lu\n", timesynch_time() / );
+	PRINTF("Beacon Send ");
         rf_broadcast_send(create_beacon());
         break;
 

@@ -108,7 +108,7 @@ const void* conf_ptr[RULE_TTL+1] =
     //Million A: check if report packet is arriving
       if (p->info.rssi >= conf.rssi_min && p->header.net == conf.my_net){
       if (p->header.typ == BEACON){
-        PRINTF("[PHD]: Beacon\n");
+        PRINTF("[PHD]: Beacon %d from %d.%d\n", get_payload_at(p,2), p->header.src.u8[0], p->header.src.u8[1]);
         handle_beacon(p);
       } else {
 	if(is_my_address(&(p->header.nxh))){
@@ -179,7 +179,6 @@ const void* conf_ptr[RULE_TTL+1] =
   {
     if (is_my_address(&(p->header.dst)))
     {     
-      PRINTF("Data Pkt %d Received at: %lu\n", p->payload[5], (timesynch_time()/CLOCK_SECOND));
       PRINTF("[PHD]: Consuming Packet\n");
       packet_deallocate(p);
     } else {

@@ -36,7 +36,6 @@
 #include "neighbor-table.h"
 #include "sdn-wise.h"
 #include "packet-handler.h"
-#include "net/rime/timesynch.h"
 #define DEBUG 1
 #if DEBUG && (!SINK || DEBUG_SINK)
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -44,6 +43,7 @@
 #define PRINTF(...)
 #endif
 /*----------------------------------------------------------------------------*/
+uint8_t beacon_counter = 0;
 packet_t* 
 create_beacon(void)
 {
@@ -59,8 +59,9 @@ create_beacon(void)
     
     SENSORS_ACTIVATE(battery_sensor);
     set_payload_at(p, BEACON_BATT_INDEX, battery_sensor.value(0));
-    //Million to measure time delay
-    set_sent_time(p, timesynch_time());
+    PRINTF("%d \n", beacon_counter);
+    set_payload_at(p, 2, beacon_counter);
+    beacon_counter++;
     SENSORS_DEACTIVATE(battery_sensor);
   }
   return p;
