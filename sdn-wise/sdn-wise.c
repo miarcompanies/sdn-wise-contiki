@@ -72,10 +72,14 @@
 #define DEBUG 1
 #if DEBUG && (!SINK || DEBUG_SINK)
 #include <stdio.h>
+#include <inttypes.h>
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
 #define PRINTF(...)
 #endif
+//show define
+#define STR(x) #x
+#define SHOW_DEFINE(x) printf("%s=%s\n", #x, STR(x))
 /*----------------------------------------------------------------------------*/
   PROCESS(main_proc, "Main Process");
   PROCESS(rf_u_send_proc, "RF Unicast Send Process");
@@ -147,6 +151,8 @@
     if(uart_buffer_index == UART_BUFFER_SIZE)
     	uart_buffer_index = 0;
     uart_buffer[uart_buffer_index] = c;
+    if(uart_buffer_index<5)
+    	tmp_uart_buffer[uart_buffer_index] = uart_buffer[uart_buffer_index]; 
     //if (uart_buffer_index == LEN_INDEX){
       //Million: reduced size of expected for fast printing
       //uart_buffer_expected = c;
@@ -161,7 +167,7 @@
         tmp_index = 0;
     }
     uart_buffer_index++;
-    if((tmp_index == 5) && ((tmp_uart_buffer[0] == 100) || (tmp_uart_buffer[2] == 117 || tmp_uart_buffer[2] == 98 || tmp_uart_buffer[2] == 100) || (tmp_uart_buffer[2]== 114 && tmp_uart_buffer[3] == 102) || (tmp_uart_buffer[2]== 115 && tmp_uart_buffer[3] == 102) || (tmp_uart_buffer[2] == 116 && tmp_uart_buffer[4] == 114) )){ 
+    if((tmp_index == 5 || uart_buffer_index == 5) && ((tmp_uart_buffer[0] == 100) || (tmp_uart_buffer[2] == 117 || tmp_uart_buffer[2] == 98 || tmp_uart_buffer[2] == 100) || (tmp_uart_buffer[2]== 114 && tmp_uart_buffer[3] == 102) || (tmp_uart_buffer[2]== 115 && tmp_uart_buffer[3] == 102) || (tmp_uart_buffer[2] == 116 && tmp_uart_buffer[4] == 114) )){ 
 	copy_to_tmp = 0;
         tmp_index = 0;
     //if (uart_buffer_index == uart_buffer_expected){
@@ -343,8 +349,10 @@
       if (p != NULL){
         p->info.rssi = 255;
         if(p->header.typ == DATA){
-		PRINTF("Data Pkt %d Sent at: %lu, in rtime form %u\n", packet_counter, (timesynch_time()/CLOCK_SECOND), timesynch_time_to_rtimer(timesynch_time())); //%lu
+		//PRINTF("Data Pkt %d Sent at: %"PRIu32" \n", packet_counter, timesynch_time()); //%lu
+		PRINTF("Data Pkt %d Sent at: %lu \n", packet_counter, (unsigned long)timesynch_time()); //%lu
 		set_payload_at(p, 5, packet_counter);
+		set_payload_at(p, 6, timesynch_time());
 		print_report_data(tmp_uart_buffer[1], tmp_uart_buffer[2], tmp_uart_buffer[3], tmp_uart_buffer[4]);
 		packet_counter++;
         }
@@ -375,13 +383,10 @@
 
     uart0_init(BAUD2UBR(115200));       /* set the baud rate as necessary */
     uart0_set_input(uart_rx_callback);  /* set the callback function */
-    
     //Million time synch
     timesynch_init();
 #if SINK
     timesynch_set_authority_level(0);
-#else
-    timesynch_set_authority_level(1);
 #endif
     node_conf_init();
     flowtable_init();
@@ -389,7 +394,6 @@
     neighbor_table_init();
     address_list_init();
     leds_init();
-
 #if SINK
     print_packet_uart(create_reg_proxy());
 #endif    
@@ -445,7 +449,10 @@
         case RF_SEND_BEACON_EVENT:
         leds_toggle(LEDS_RED);
 	PRINTF("Beacon Send\n");
-	PRINTF("Synchronized Timer: %lu, rtimer format %u\n", (timesynch_time()/CLOCK_SECOND), timesynch_time_to_rtimer(timesynch_time())); //%lu
+	//PRINTF("Synchronized Timer: %"PRIu32" %"PRIu32" %"PRIu32"\n", timesynch_time(), RTIMER_NOW(), (1000L *timesynch_time()) / RTIMER_ARCH_SECOND); //%lu
+	PRINTF("Synchronized Timer: %lu %lu %lu\n", (unsigned long)timesynch_time(), (unsigned long)RTIMER_NOW(), (unsigned long)(1000L *timesynch_time()) / RTIMER_ARCH_SECOND); //%lu
+	PRINTF("Clock_time: %lu / %lu Clock_second: %lu\n", (unsigned long)clock_time(), CLOCK_SECOND, clock_seconds());
+	//PRINTF("Synchronized Timer: %lu\n", timesynch_time() / );
         rf_broadcast_send(create_beacon());
         break;
 
@@ -547,6 +554,7 @@
       //Million slow the timer from 3 to 15
       //etimer_set(&et, 3 * CLOCK_SECOND);
       etimer_set(&et, 15 * CLOCK_SECOND);
+      //etimer_set(&et, 15 * RTIMER_ARCH_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
       //Million reset timer to display neighbor table every 15 seconds
       etimer_reset(&et);
@@ -563,6 +571,7 @@
       //Million slow the timer from 3 to 15
       //etimer_set(&et, 3 * CLOCK_SECOND);
       etimer_set(&et, 25 * CLOCK_SECOND);
+      //etimer_set(&et, 25 * RTIMER_ARCH_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
       //Million reset timer to display neighbor table every 15 seconds
       etimer_reset(&et);
@@ -583,6 +592,7 @@
       }
 #endif
       etimer_set(&et, conf.beacon_period * CLOCK_SECOND);
+      //etimer_set(&et, conf.beacon_period * RTIMER_ARCH_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
       process_post(&main_proc, RF_SEND_BEACON_EVENT, (process_data_t)NULL);
     }
@@ -600,6 +610,7 @@
       }
 #endif
       etimer_set(&et, conf.report_period * CLOCK_SECOND);
+      //etimer_set(&et, conf.report_period * RTIMER_ARCH_SECOND);
       PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
       process_post(&main_proc, RF_SEND_REPORT_EVENT, (process_data_t)NULL);
     }
