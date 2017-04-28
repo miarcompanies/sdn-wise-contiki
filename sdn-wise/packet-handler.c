@@ -179,6 +179,7 @@ const void* conf_ptr[RULE_TTL+1] =
   {
     if (is_my_address(&(p->header.dst)))
     {     
+      PRINTF("Data Packet %d from %d.%d Arrived\n", get_payload_at(p,5), p->header.src.u8[0], p->header.src.u8[1]);
       PRINTF("[PHD]: Consuming Packet\n");
       packet_deallocate(p);
     } else {
@@ -431,10 +432,10 @@ const void* conf_ptr[RULE_TTL+1] =
   		newaddr[0] = newaddr[1] = 255;
 		a = create_action(FORWARD_B, &(newaddr[0]), ADDRESS_LENGTH);
 	    }
-	    else if(p->payload[2] == 97) //'a'
-		a = create_action(ASK, &(addr[0]), ADDRESS_LENGTH);
-	    else
-	 	a = create_action(DROP, &(addr[0]), ADDRESS_LENGTH);
+	  //  else if(p->payload[2] == 97) //'a'
+	//	a = create_action(ASK, &(addr[0]), ADDRESS_LENGTH);
+	    //else
+	 	//a = create_action(DROP, &(addr[0]), ADDRESS_LENGTH);
 	    add_action(e,a);
 	    //Million ... window added
 	    window_t* w = create_window();

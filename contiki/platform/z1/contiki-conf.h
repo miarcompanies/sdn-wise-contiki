@@ -119,7 +119,7 @@
 #endif
 //Million TimeSynch
 #ifndef TIMESYNCH_CONF_ENABLED
-#define TIMESYNCH_CONF_ENABLED           1
+#define TIMESYNCH_CONF_ENABLED           0
 #endif /* TIMESYNCH_CONF_ENABLED */
 
 #if TIMESYNCH_CONF_ENABLED

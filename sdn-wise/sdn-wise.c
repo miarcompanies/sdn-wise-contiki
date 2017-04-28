@@ -104,7 +104,7 @@
   static uint8_t tmp_uart_buffer[5];
   static uint8_t copy_to_tmp = 0;
   static uint8_t tmp_index = 0;
-  uint8_t packet_counter = 0;
+  uint8_t data_packet_counter = 0;
 /*----------------------------------------------------------------------------*/
   void
   rf_unicast_send(packet_t* p)
@@ -347,9 +347,10 @@
       if (p != NULL){
         p->info.rssi = 255;
         if(p->header.typ == DATA){
-		set_payload_at(p, 5, packet_counter);
+		set_payload_at(p, 5, data_packet_counter);
 		print_report_data(tmp_uart_buffer[1], tmp_uart_buffer[2], tmp_uart_buffer[3], tmp_uart_buffer[4]);
-		packet_counter++;
+		PRINTF("Send Data Packet %d\n", data_packet_counter);
+		data_packet_counter++;
         }
         else{
 		print_report_config(tmp_uart_buffer[0], tmp_uart_buffer[1], tmp_uart_buffer[3], tmp_uart_buffer[4]);

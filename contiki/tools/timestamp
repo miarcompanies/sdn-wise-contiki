@@ -1,3 +1,6 @@
 #!/bin/sh
 # We run perl through a shell to avoid having to hard-code the path to perl
-perl -e '$|=1; while(<>) {print time . " $_";}'
+#perl -e '$|=1; while(<>) {print time . " $_";}'
+#perl -MPOSIX=strftime -MTime::HiRes=time -le '$t = time; $s=sprintf "%06.3f", $t-int($t/60)*60; print strftime "%H:%M:$s %d:%m:%Y", localtime $t;' -e '$|=1; while(<>) {print time . " $_";}'
+#perl -MPOSIX=strftime -MTime::HiRes=time -e '$|=1; while(<>) {$t = time; $s=sprintf "%06.6f", $t-int($t/60)*60; print strftime "%H:%M:$s %d:%m:%Y", localtime $t; print time . " $_";}'
+perl -MPOSIX=strftime -MTime::HiRes=time -e '$|=1; while(<>) {$t = time; $s=sprintf "%06.3f", $t-int($t/60)*60; print strftime "%H:%M:$s ", localtime $t; print " $_";}'
