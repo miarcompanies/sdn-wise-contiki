@@ -3,7 +3,7 @@
 
 The Open Source OS for the Internet of Things meets the Software Defined Networking.
 
-Work in progress...
+Part of a masters thesis carried out in Norwegian University of Science and Technology(NTNU)
 
 ### Versioning
 
