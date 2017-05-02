@@ -163,7 +163,9 @@ const void* conf_ptr[RULE_TTL+1] =
     
     uint8_t new_hops = get_payload_at(p, BEACON_HOPS_INDEX);
     if (new_hops <= conf.hops_from_sink-1 &&
-      p->info.rssi > conf.rssi_from_sink)
+    	//Million Aregawi: modified lower rssi value is strong
+//      p->info.rssi > conf.rssi_from_sink)
+	p->info.rssi < conf.rssi_from_sink)
     {
       conf.nxh_vs_sink = p->header.src;
       conf.hops_from_sink = new_hops+1;

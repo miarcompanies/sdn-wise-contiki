@@ -35,7 +35,9 @@
 #include "packet-buffer.h"
 #include "neighbor-table.h"
 #include "packet-creator.h"
+#include "node-conf.h"
 
+#define _PACKET_TTL  100;
 #define DEBUG 1
 #if DEBUG && !SINK
 #include <stdio.h>
@@ -99,8 +101,12 @@
     neighbor_t *next;
     for(n = list_head(neighbor_table); n != NULL;) {
       next = n;
-      if(next->is_alive == 0)
+      if(next->is_alive == 0){
 	remove_neighbor(next);
+	//Million reset number of hops to 100
+	//conf.hops_from_sink = _PACKET_TTL;
+	//conf.rssi_from_sink = 0;
+      }
       next = n->next;
       n = next;
     }
