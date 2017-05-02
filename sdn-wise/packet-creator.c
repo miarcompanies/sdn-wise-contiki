@@ -43,6 +43,7 @@
 #define PRINTF(...)
 #endif
 /*----------------------------------------------------------------------------*/
+uint8_t beacon_counter = 0;
 packet_t* 
 create_beacon(void)
 {
@@ -58,6 +59,9 @@ create_beacon(void)
     
     SENSORS_ACTIVATE(battery_sensor);
     set_payload_at(p, BEACON_BATT_INDEX, battery_sensor.value(0));
+    PRINTF("%d \n", beacon_counter);
+    set_payload_at(p, 2, beacon_counter);
+    beacon_counter++;
     SENSORS_DEACTIVATE(battery_sensor);
   }
   return p;

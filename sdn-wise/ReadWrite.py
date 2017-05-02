@@ -5,17 +5,17 @@ import serial
 import networkx as nx
 import threading
 from threading import Thread
+from datetime import datetime
 import networkx as nx
 def readUART(Topo):
 	try:
-		ser = serial.Serial('/dev/ttyUSB0',115200)
+		ser = serial.Serial('/dev/ttyUSB4',115200)
 	        time.sleep(30)
 		prev_length = []
 		length = []
 		for t in range(20):
 			prev_length.append(0)
 			length.append(0)	
-		print 'Reading  ...'
 		while 1:
 			#time.sleep(3)
 			mtype = ser.readline()
@@ -23,6 +23,8 @@ def readUART(Topo):
 				topo = ser.readline()
 				print 'Topo:'+topo
 				topoarray = map(int, topo.split(","))
+				#print datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+				print datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]
 				print "Topo in Array:"
 				print topoarray
 				for s in range(20): #20 nodes assumed
@@ -62,15 +64,15 @@ def readUART(Topo):
 						bauni = bytearray(unicastcommand)
                         			ser.write(bauni)
 				except Exception:
-					dropcommand = str(reqarray[0]-1)
-					dropcommand += str(reqarray[0]-1)
-					dropcommand += 'd'
-					dropcommand += str(reqarray[2]-1)
-					dropcommand += str(reqarray[2]-1) 
-					dropcommand += str('\n')
-					print "Drop Packet Command to send: "+dropcommand
-					babro = bytearray(dropcommand)
-                                        ser.write(babro)
+					#dropcommand = str(reqarray[0]-1)
+					#dropcommand += str(reqarray[0]-1)
+					#dropcommand += 'd'
+					#dropcommand += str(reqarray[2]-1)
+					#dropcommand += str(reqarray[2]-1) 
+					#dropcommand += str('\n')
+					#print "Drop Packet Command to send: "+dropcommand
+					#babro = bytearray(dropcommand)
+                                        #ser.write(babro)
         				print "Node %d not reachable from %d" % (reqarray[2],reqarray[0])
 			else:
 				print mtype
@@ -78,7 +80,7 @@ def readUART(Topo):
 		sys.exit()
 def writeUART(Topo):
 	try:
-	        ser = serial.Serial('/dev/ttyUSB0',115200)
+	        ser = serial.Serial('/dev/ttyUSB4',115200)
 	        time.sleep(30)
 		#status = raw_input('Please enter your command - write Exit to quit\n')
 		print 'Please enter your command - write Exit to quit\n'
