@@ -203,7 +203,7 @@
     conf.rssi_from_sink = 0;
 #endif
 #if NODE9
-    //Million A. static adderess added NODE = 0.5
+    //Million A. static adderess added NODE = 0.10
     conf.my_address.u8[0] = 10;
     conf.my_address.u8[1] = 0;
     conf.sink_address.u8[0] = 1;
@@ -218,7 +218,7 @@
     conf.rssi_from_sink = 0;
 #endif
 #if NODE10
-    //Million A. static adderess added NODE = 0.5
+    //Million A. static adderess added NODE = 0.11
     conf.my_address.u8[0] = 11;
     conf.my_address.u8[1] = 0;
     conf.sink_address.u8[0] = 1;
