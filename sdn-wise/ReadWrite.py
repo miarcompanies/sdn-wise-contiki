@@ -9,11 +9,11 @@ from datetime import datetime
 import networkx as nx
 def readUART(Topo):
 	try:
-		ser = serial.Serial('/dev/ttyUSB4',115200)
+		ser = serial.Serial('/dev/ttyUSB7',115200)
 	        time.sleep(30)
 		prev_length = []
 		length = []
-		for t in range(20):
+		for t in range(10):
 			prev_length.append(0)
 			length.append(0)	
 		while 1:
@@ -27,13 +27,13 @@ def readUART(Topo):
 				print datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]
 				print "Topo in Array:"
 				print topoarray
-				for s in range(20): #20 nodes assumed
+				for s in range(10): #10 nodes assumed
 					if topoarray[0] == s+1:
 						length[s] = len(topoarray)
 						print length[s]
 						if length[s] != prev_length[s]:#topology changes
 							Topo.clear()
-							prev_length[s] = length[s]
+						prev_length[s] = length[s]
 				Topo.add_node(topoarray[0])
 				for num in range(2,len(topoarray)-2,3): 
 					Topo.add_node(topoarray[num])
@@ -80,7 +80,7 @@ def readUART(Topo):
 		sys.exit()
 def writeUART(Topo):
 	try:
-	        ser = serial.Serial('/dev/ttyUSB4',115200)
+	        ser = serial.Serial('/dev/ttyUSB7',115200)
 	        time.sleep(30)
 		#status = raw_input('Please enter your command - write Exit to quit\n')
 		print 'Please enter your command - write Exit to quit\n'

@@ -373,85 +373,85 @@ const void* conf_ptr[RULE_TTL+1] =
 		PRINTF("Radio Turned On\n");
 	    }
             else{
-	    PRINTF("Flow Table - Before\n");
-	    print_flowtable();
-	    entry_t* e = create_entry();
-	    action_t* a;
+		PRINTF("Flow Table - Before\n");
+		print_flowtable();
+		entry_t* e = create_entry();
+		action_t* a;
 	    //Million if Node 1, 2, 3, specify address accordingly
-	    uint8_t addr[ADDRESS_LENGTH];
-	    if(p->payload[3] == 49 && p->payload[4] == 49){ //'1'
-	    	addr[0] = 2;
-	        addr[1] = 0;
-	    }
-	    else if(p->payload[3] == 50 && p->payload[4] == 50){ //'2'
-	        addr[0] = 3;
-	        addr[1] = 0;
-	    }
-	    else if(p->payload[3] == 51 && p->payload[4] == 51){//'3'
-	        addr[0] = 4;
-	        addr[1] = 0;
-	    }
-	    else if(p->payload[3] == 52 && p->payload[4] == 52){//'4'
-	        addr[0] = 5;
-	        addr[1] = 0;
-	    }
-	    else if(p->payload[3] == 53 && p->payload[4] == 53){//'5'
-	        addr[0] = 6;
-        	addr[1] = 0;
-	    }
-	    else if(p->payload[3] == 54 && p->payload[4] == 54){//'6'
-                addr[0] = 7;
-                addr[1] = 0;
-            }
-	    else if(p->payload[3] == 55 && p->payload[4] == 55){//'7'
-                addr[0] = 8;
-                addr[1] = 0;
-            }
-	    else if(p->payload[3] == 56 && p->payload[4] == 56){//'8'
-                addr[0] = 9;
-                addr[1] = 0;
-            }
-	    else if(p->payload[3] == 57 && p->payload[4] == 57){//'9'
-                addr[0] = 10;
-                addr[1] = 0;
-            }
-	    else if(p->payload[3] == 49 && p->payload[4] == 48){//'10'
-                addr[0] = 11;
-                addr[1] = 0;
-            }
-	    else{
-	    	addr[0] = 1;
-	        addr[1] = 0;
-	    }
-	    if(p->payload[2] == 117){ //'u'
-		//a = create_action(FORWARD_U, &(p->payload[0]), ADDRESS_LENGTH);
-	    	a = create_action(FORWARD_U, &(addr[0]), ADDRESS_LENGTH); 
-	    }
-	    else if(p->payload[2] == 98){ //'b'
-		uint8_t newaddr[ADDRESS_LENGTH];
-  		newaddr[0] = newaddr[1] = 255;
-		a = create_action(FORWARD_B, &(newaddr[0]), ADDRESS_LENGTH);
-	    }
+	   	 uint8_t addr[ADDRESS_LENGTH];
+		    if(p->payload[3] == 49 && p->payload[4] == 49){ //'1'
+		    	addr[0] = 2;
+	        	addr[1] = 0;
+		    }
+		    else if(p->payload[3] == 50 && p->payload[4] == 50){ //'2'
+	        	addr[0] = 3;
+		        addr[1] = 0;
+		    }
+		    else if(p->payload[3] == 51 && p->payload[4] == 51){//'3'
+		        addr[0] = 4;
+	        	addr[1] = 0;
+		    }
+		    else if(p->payload[3] == 52 && p->payload[4] == 52){//'4'
+	        	addr[0] = 5;
+		        addr[1] = 0;
+		    }
+		    else if(p->payload[3] == 53 && p->payload[4] == 53){//'5'
+		        addr[0] = 6;
+        		addr[1] = 0;
+		    }
+		    else if(p->payload[3] == 54 && p->payload[4] == 54){//'6'
+                	addr[0] = 7;
+	                addr[1] = 0;
+        	    }
+		    else if(p->payload[3] == 55 && p->payload[4] == 55){//'7'
+        	        addr[0] = 8;
+                	addr[1] = 0;
+	            }
+		    else if(p->payload[3] == 56 && p->payload[4] == 56){//'8'
+                	addr[0] = 9;
+	                addr[1] = 0;
+        	    }
+		    else if(p->payload[3] == 57 && p->payload[4] == 57){//'9'
+        	        addr[0] = 10;
+                	addr[1] = 0;
+	            }
+		    else if(p->payload[3] == 49 && p->payload[4] == 48){//'10'
+                	addr[0] = 11;
+	                addr[1] = 0;
+	            }
+		    else{
+	    		addr[0] = 1;
+		        addr[1] = 0;
+		    }
+		    if(p->payload[2] == 117){ //'u'
+			//a = create_action(FORWARD_U, &(p->payload[0]), ADDRESS_LENGTH);
+		    	a = create_action(FORWARD_U, &(addr[0]), ADDRESS_LENGTH); 
+		    }
+		    else if(p->payload[2] == 98){ //'b'
+			uint8_t newaddr[ADDRESS_LENGTH];
+	  		newaddr[0] = newaddr[1] = 255;
+			a = create_action(FORWARD_B, &(newaddr[0]), ADDRESS_LENGTH);
+		    }
 	  //  else if(p->payload[2] == 97) //'a'
 	//	a = create_action(ASK, &(addr[0]), ADDRESS_LENGTH);
 	    //else
 	 	//a = create_action(DROP, &(addr[0]), ADDRESS_LENGTH);
-	    add_action(e,a);
+		    add_action(e,a);
 	    //Million ... window added
-	    window_t* w = create_window();
-	    w->operation = EQUAL;
-	    w->size = SIZE_2;
-	    w->lhs = DST_INDEX;
+		    window_t* w = create_window();
+		    w->operation = EQUAL;
+		    w->size = SIZE_2;
+		    w->lhs = DST_INDEX;
  	    //w->lhs = TYP_INDEX;
-	    w->lhs_location = PACKET;
-	    w->rhs = MERGE_BYTES(addr[0], addr[1]);
-	    w->rhs_location = CONST;
-	    add_window(e,w);
-	    PRINTF("This Entry to be added to flowtable\n");
-	    print_entry(e);
-	    add_entry(e);
-	    PRINTF("Flow Table - After\n");
-	    print_flowtable();
+		    w->lhs_location = PACKET;
+		    w->rhs = MERGE_BYTES(addr[0], addr[1]);
+		    w->rhs_location = CONST;
+		    add_window(e,w);
+		    PRINTF("This Entry to be added to flowtable\n");
+		    print_entry(e);
+		    add_entry(e);
+		    PRINTF("Flow Table - After\n");
+		    print_flowtable();
             }
 	    packet_deallocate(p);
 	    
