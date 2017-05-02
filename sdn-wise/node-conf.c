@@ -38,8 +38,8 @@
 //Million Beacon period modified to 10, and report period to 20
 #define _BEACON_PERIOD  5
 //#define _BEACON_PERIOD  10
-//#define _REPORT_PERIOD  10
-#define _REPORT_PERIOD  20
+#define _REPORT_PERIOD  10
+//#define _REPORT_PERIOD  20
 #define _RULE_TTL  100
 #define _RSSI_MIN 0
 #define _PACKET_TTL  100;
