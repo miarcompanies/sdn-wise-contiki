@@ -161,7 +161,9 @@ const void* conf_ptr[RULE_TTL+1] =
 #if !SINK  
   // TODO what if the network changes?
     
+    PRINTF("Before: Hops = %d NXH: %d.%d\n", conf.hops_from_sink, conf.nxh_vs_sink.u8[0], conf.nxh_vs_sink.u8[1]);
     uint8_t new_hops = get_payload_at(p, BEACON_HOPS_INDEX);
+    PRINTF("New Hops: %d New RSSI: %d Existing RSSI: %d\n", new_hops, p->info.rssi, conf.rssi_from_sink);
     if (new_hops <= conf.hops_from_sink-1 &&
     	//Million Aregawi: modified lower rssi value is strong
 //      p->info.rssi > conf.rssi_from_sink)
@@ -171,6 +173,7 @@ const void* conf_ptr[RULE_TTL+1] =
       conf.hops_from_sink = new_hops+1;
       conf.rssi_from_sink = p->info.rssi;  
       conf.sink_address = p->header.nxh;
+      PRINTF("After: Hops = %d NXH: %d.%d\n", conf.hops_from_sink, conf.nxh_vs_sink.u8[0], conf.nxh_vs_sink.u8[1]);
     }
 #endif
     packet_deallocate(p);

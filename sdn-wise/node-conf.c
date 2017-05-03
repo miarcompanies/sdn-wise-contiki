@@ -80,7 +80,8 @@
     conf.nxh_vs_sink = conf.my_address;
     conf.sink_address = conf.my_address;;
     conf.hops_from_sink = 0;
-    conf.rssi_from_sink = 255;
+    //conf.rssi_from_sink = 255;
+    conf.rssi_from_sink = 0;
 #endif
 #if NODE1
     //Million A. static adderess added NODE = 0.5
@@ -95,7 +96,8 @@
     //set_broadcast_address(&(conf.nxh_vs_sink));
     //set_broadcast_address(&(conf.sink_address));
     conf.hops_from_sink = _PACKET_TTL;
-    conf.rssi_from_sink = 0;
+    //conf.rssi_from_sink = 0; original vaue
+    conf.rssi_from_sink = 100;
 #endif 
 #if NODE2
     //Million A. static adderess added NODE = 0.5
@@ -110,7 +112,7 @@
     //set_broadcast_address(&(conf.nxh_vs_sink));
     //set_broadcast_address(&(conf.sink_address));
     conf.hops_from_sink = _PACKET_TTL;
-    conf.rssi_from_sink = 0;
+    conf.rssi_from_sink = 100;
 #endif
 #if NODE3
     //Million A. static adderess added NODE = 0.5
@@ -125,7 +127,7 @@
     //set_broadcast_address(&(conf.nxh_vs_sink));
     //set_broadcast_address(&(conf.sink_address));
     conf.hops_from_sink = _PACKET_TTL;
-    conf.rssi_from_sink = 0;
+    conf.rssi_from_sink = 100;
 #endif
 #if NODE4
     //Million A. static adderess added NODE = 0.5
@@ -140,7 +142,7 @@
     //set_broadcast_address(&(conf.nxh_vs_sink));
     //set_broadcast_address(&(conf.sink_address));
     conf.hops_from_sink = _PACKET_TTL;
-    conf.rssi_from_sink = 0;
+    conf.rssi_from_sink = 100;
 #endif
 #if NODE5
     //Million A. static adderess added NODE = 0.5
@@ -155,7 +157,7 @@
     //set_broadcast_address(&(conf.nxh_vs_sink));
     //set_broadcast_address(&(conf.sink_address));
     conf.hops_from_sink = _PACKET_TTL;
-    conf.rssi_from_sink = 0;
+    conf.rssi_from_sink = 100;
 #endif
 #if NODE6
     //Million A. static adderess added NODE = 0.5
@@ -170,7 +172,7 @@
     //set_broadcast_address(&(conf.nxh_vs_sink));
     //set_broadcast_address(&(conf.sink_address));
     conf.hops_from_sink = _PACKET_TTL;
-    conf.rssi_from_sink = 0;
+    conf.rssi_from_sink = 100;
 #endif
 #if NODE7
     //Million A. static adderess added NODE = 0.5
@@ -185,7 +187,7 @@
     //set_broadcast_address(&(conf.nxh_vs_sink));
     //set_broadcast_address(&(conf.sink_address));
     conf.hops_from_sink = _PACKET_TTL;
-    conf.rssi_from_sink = 0;
+    conf.rssi_from_sink = 100;
 #endif
 #if NODE8
     //Million A. static adderess added NODE = 0.5
@@ -200,7 +202,7 @@
     //set_broadcast_address(&(conf.nxh_vs_sink));
     //set_broadcast_address(&(conf.sink_address));
     conf.hops_from_sink = _PACKET_TTL;
-    conf.rssi_from_sink = 0;
+    conf.rssi_from_sink = 100;
 #endif
 #if NODE9
     //Million A. static adderess added NODE = 0.10
@@ -215,7 +217,7 @@
     //set_broadcast_address(&(conf.nxh_vs_sink));
     //set_broadcast_address(&(conf.sink_address));
     conf.hops_from_sink = _PACKET_TTL;
-    conf.rssi_from_sink = 0;
+    conf.rssi_from_sink = 100;
 #endif
 #if NODE10
     //Million A. static adderess added NODE = 0.11
@@ -230,7 +232,7 @@
     //set_broadcast_address(&(conf.nxh_vs_sink));
     //set_broadcast_address(&(conf.sink_address));
     conf.hops_from_sink = _PACKET_TTL;
-    conf.rssi_from_sink = 0;
+    conf.rssi_from_sink = 100;
 #endif
 
   }

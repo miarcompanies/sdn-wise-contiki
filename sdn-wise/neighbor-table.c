@@ -102,10 +102,15 @@
     for(n = list_head(neighbor_table); n != NULL;) {
       next = n;
       if(next->is_alive == 0){
-	remove_neighbor(next);
 	//Million reset number of hops to 100
-	//conf.hops_from_sink = _PACKET_TTL;
-	//conf.rssi_from_sink = 0;
+	if((conf.nxh_vs_sink.u8[0] == next->address.u8[0]) && (conf.nxh_vs_sink.u8[1] == next->address.u8[1])){
+		//conf.nxh_vs_sink = conf.sink_address;
+		conf.nxh_vs_sink.u8[0] = 1;
+		conf.nxh_vs_sink.u8[1] = 0;
+		conf.hops_from_sink = _PACKET_TTL;
+		conf.rssi_from_sink = 100;
+	}
+	remove_neighbor(next);
       }
       next = n->next;
       n = next;
