@@ -84,7 +84,7 @@
   PROCESS(rf_b_send_proc, "RF Broadcast Send Process");
   PROCESS(packet_handler_proc, "Packet Handler Process");
   PROCESS(timer_proc, "Timer Process");
-  PROCESS(update_topo_proc, "Update Topology Process");
+  //PROCESS(update_topo_proc, "Update Topology Process");
   PROCESS(beacon_timer_proc, "Beacon Timer Process");
   PROCESS(report_timer_proc, "Report Timer Process");
   AUTOSTART_PROCESSES(
@@ -92,7 +92,7 @@
     &rf_u_send_proc,
     &rf_b_send_proc,
     &timer_proc,
-    &update_topo_proc,
+    //&update_topo_proc,
     &beacon_timer_proc,
     &report_timer_proc,
     &packet_handler_proc
@@ -536,6 +536,7 @@
 /*----------------------------------------------------------------------------*/
   PROCESS_THREAD(timer_proc, ev, data) {
     static struct etimer et;
+    static struct etimer et_update;
     PROCESS_BEGIN();
 
     while(1) {
@@ -547,11 +548,18 @@
       //Million reset timer to display neighbor table every 15 seconds
       etimer_reset(&et);
       process_post(&main_proc, TIMER_EVENT, (process_data_t)NULL);
+      //Million Update Topo	
+      etimer_set(&et_update, 10 * CLOCK_SECOND);
+      //etimer_set(&et, 25 * RTIMER_ARCH_SECOND);
+      PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et_update));
+       //Million reset timer to display neighbor table every 15 seconds
+      etimer_reset(&et_update);
+      process_post(&main_proc, UPDATE_TOPO_EVENT, (process_data_t)NULL);
     }
     PROCESS_END();
   }
 
-  PROCESS_THREAD(update_topo_proc, ev, data) {
+  /*PROCESS_THREAD(update_topo_proc, ev, data) {
     static struct etimer et;
     PROCESS_BEGIN();
 
@@ -566,7 +574,7 @@
       process_post(&main_proc, UPDATE_TOPO_EVENT, (process_data_t)NULL);
     }
     PROCESS_END();
-  }
+  }*/
 
 /*----------------------------------------------------------------------------*/
   PROCESS_THREAD(beacon_timer_proc, ev, data) {
