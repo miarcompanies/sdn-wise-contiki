@@ -381,9 +381,12 @@ const void* conf_ptr[RULE_TTL+1] =
 		PRINTF("Flow Table - Before\n");
 		print_flowtable();
 		entry_t* e = create_entry();
+		entry_t* e2 = create_entry();
 		action_t* a;
+		action_t* a2;
 	    //Million if Node 1, 2, 3, specify address accordingly
 	   	 uint8_t addr[ADDRESS_LENGTH];
+		 uint8_t addr2[ADDRESS_LENGTH];
 		    if(p->payload[3] == 49 && p->payload[4] == 49){ //'1'
 		    	addr[0] = 2;
 	        	addr[1] = 0;
@@ -420,17 +423,36 @@ const void* conf_ptr[RULE_TTL+1] =
         	        addr[0] = 10;
                 	addr[1] = 0;
 	            }
-		    else if(p->payload[3] == 49 && p->payload[4] == 48){//'10'
+		    /*else if(p->payload[3] == 49 && p->payload[4] == 48){//'10'
                 	addr[0] = 11;
 	                addr[1] = 0;
-	            }
-		    else{
-	    		addr[0] = 1;
-		        addr[1] = 0;
-		    }
+	            }*/
 		    if(p->payload[2] == 117){ //'u'
 			//a = create_action(FORWARD_U, &(p->payload[0]), ADDRESS_LENGTH);
-		    	a = create_action(FORWARD_U, &(addr[0]), ADDRESS_LENGTH); 
+			if(p->payload[3] != p->payload[4]){
+				addr[0] = ((p->payload[3] % 10) + 3) % 10;
+				addr[1] = 0;
+				addr2[0] = ((p->payload[4] % 10) + 3) % 10;
+				addr2[1] = 0;
+		                a2 = create_action(FORWARD_U, &(addr[0]), ADDRESS_LENGTH); 
+		                add_action(e2,a2);
+ 	                        //Million ... window added
+				window_t* w2 = create_window();
+				w2->operation = EQUAL;
+				w2->size = SIZE_2;
+				w2->lhs = DST_INDEX;
+				//w->lhs = TYP_INDEX;
+				w2->lhs_location = PACKET;
+				w2->rhs = MERGE_BYTES(addr2[0], addr2[1]);
+				w2->rhs_location = CONST;
+				add_window(e2,w2);
+				PRINTF("This Entry to be added to flowtable\n");
+				print_entry(e2);
+				add_entry(e2);
+				PRINTF("Flow Table - After\n");
+				print_flowtable();
+			}
+			a = create_action(FORWARD_U, &(addr[0]), ADDRESS_LENGTH);
 		    }
 		    else if(p->payload[2] == 98){ //'b'
 			uint8_t newaddr[ADDRESS_LENGTH];

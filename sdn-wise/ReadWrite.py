@@ -9,8 +9,8 @@ from datetime import datetime
 import networkx as nx
 def readUART(Topo):
 	try:
-		ser = serial.Serial('/dev/ttyUSB7',115200)
-	        time.sleep(30)
+		ser = serial.Serial('/dev/ttyUSB0',115200)
+	        time.sleep(10)
 		prev_length = []
 		length = []
 		for t in range(10):
@@ -24,7 +24,8 @@ def readUART(Topo):
 				print 'Topo:'+topo
 				topoarray = map(int, topo.split(","))
 				#print datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
-				print datetime.utcnow().strftime('%H:%M:%S.%f')[:-3]
+				#print datetime.now().strftime('%H:%M:%S.%f')[:-3]
+				print datetime.now().strftime('%H:%M:%S.%f')
 				print "Topo in Array:"
 				print topoarray
 				for s in range(10): #10 nodes assumed
@@ -53,16 +54,41 @@ def readUART(Topo):
 				try:
 					shortpath =  nx.dijkstra_path(Topo,reqarray[0],reqarray[2],weight=True)
 					print shortpath
-					for x in range(len(shortpath)-1):
-						unicastcommand = str(shortpath[x]-1)
-						unicastcommand += str(shortpath[x]-1)
+					#if (reqarray[0] == 1 and (len(shortpath) > 2)):
+					if (len(shortpath) > 2):
+						nxh = shortpath[1] - 1
+						for x in range(len(shortpath)-1):
+							unicastcommand = str(shortpath[0]-1)
+							unicastcommand += str(shortpath[0]-1)
+							unicastcommand += 'u'
+							unicastcommand += str(shortpath[x+1]-1)
+							unicastcommand += str(nxh-1)
+							unicastcommand += str('\n') 
+							print "Unicast Command to send: "+unicastcommand
+							bauni = bytearray(unicastcommand)
+				                        ser.write(bauni)
+							print "Command written to serial port"
+							time.sleep(2)
+					else:
+						unicastcommand = str(shortpath[0]-1)
+						unicastcommand += str(shortpath[0]-1)
 						unicastcommand += 'u'
-						unicastcommand += str(shortpath[x+1]-1)
-						unicastcommand += str(shortpath[x+1]-1)
-						unicastcommand += str('\n') 
+						unicastcommand += str(shortpath[1]-1)
+						unicastcommand += str(shortpath[1]-1)
+						unicastcommand += str('\n')
 						print "Unicast Command to send: "+unicastcommand
 						bauni = bytearray(unicastcommand)
-                        			ser.write(bauni)
+						ser.write(bauni)
+				#		for x in range(len(shortpath)-1):
+				#			unicastcommand = str(shortpath[x]-1)
+				#			unicastcommand += str(shortpath[x]-1)
+				#			unicastcommand += 'u'
+				#			unicastcommand += str(shortpath[x+1]-1)
+				#			unicastcommand += str(shortpath[x+1]-1)
+				#			unicastcommand += str('\n') 
+				#			print "Unicast Command to send: "+unicastcommand
+				#			bauni = bytearray(unicastcommand)
+			              #                  ser.write(bauni)
 				except Exception:
 					#dropcommand = str(reqarray[0]-1)
 					#dropcommand += str(reqarray[0]-1)
@@ -80,8 +106,8 @@ def readUART(Topo):
 		sys.exit()
 def writeUART(Topo):
 	try:
-	        ser = serial.Serial('/dev/ttyUSB7',115200)
-	        time.sleep(30)
+	        ser = serial.Serial('/dev/ttyUSB0',115200)
+	        time.sleep(10)
 		#status = raw_input('Please enter your command - write Exit to quit\n')
 		print 'Please enter your command - write Exit to quit\n'
 		status = sys.stdin.readline() 

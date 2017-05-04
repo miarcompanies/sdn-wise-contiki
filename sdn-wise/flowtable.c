@@ -513,7 +513,9 @@
       PRINTF("[FLT]: Entry added\n");
     } else {
       /* TODO rewrite the actions*/ 
-      PRINTF("[FLT]: Entry already exists\n");
+      PRINTF("[FLT]: Entry already exists, updating\n");
+      entry_free(e);
+      list_add(flowtable,e);
     }
   }
 /*----------------------------------------------------------------------------*/

@@ -160,7 +160,7 @@
         tmp_uart_buffer[tmp_index] = uart_buffer[uart_buffer_index];
         tmp_index ++;
     }
-    if(c == 10){
+    if(c == 10){ //newline \n
 	copy_to_tmp = 1;
         tmp_index = 0;
     }
@@ -212,10 +212,10 @@
         p->header.dst.u8[0] = 10;
         p->header.dst.u8[1] = 0;
       }
-      else if(tmp_uart_buffer[0] == 49 && tmp_uart_buffer[1] == 48){//'10'
+      /*else if(tmp_uart_buffer[0] == 49 && tmp_uart_buffer[1] == 48){//'10'
         p->header.dst.u8[0] = 11;
         p->header.dst.u8[1] = 0;
-      }
+      }*/
 
       else{
 	p->header.dst.u8[0] = 1;
@@ -266,10 +266,10 @@
           p->header.dst.u8[0] = 10;
           p->header.dst.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[3] == 49 && tmp_uart_buffer[4] == 48){//'10'
+	/*else if(tmp_uart_buffer[3] == 49 && tmp_uart_buffer[4] == 48){//'10'
           p->header.dst.u8[0] = 11;
           p->header.dst.u8[1] = 0;
-        }
+        }*/
         else{
           p->header.dst.u8[0] = 1;
           p->header.dst.u8[1] = 0;
@@ -314,10 +314,10 @@
           p->header.src.u8[0] = 10;
           p->header.src.u8[1] = 0;
         }
-	else if(tmp_uart_buffer[1] == 49 && tmp_uart_buffer[2] == 50){//'10'
+	/*else if(tmp_uart_buffer[1] == 49 && tmp_uart_buffer[2] == 48){//'10'
           p->header.src.u8[0] = 11;
           p->header.src.u8[1] = 0;
-        }
+        }*/
       }
       else{ 
 	p->header.typ = CONFIG;
