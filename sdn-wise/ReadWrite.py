@@ -56,7 +56,7 @@ def readUART(Topo):
 					print shortpath
 					#if (reqarray[0] == 1 and (len(shortpath) > 2)):
 					if (len(shortpath) > 2):
-						nxh = shortpath[1] - 1
+						nxh = shortpath[1]
 						for x in range(len(shortpath)-1):
 							unicastcommand = str(shortpath[0]-1)
 							unicastcommand += str(shortpath[0]-1)
