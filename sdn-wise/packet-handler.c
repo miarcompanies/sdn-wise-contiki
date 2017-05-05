@@ -434,7 +434,7 @@ const void* conf_ptr[RULE_TTL+1] =
 				addr[1] = 0;
 				addr2[0] = ((p->payload[4] % 10) + 3) % 10;
 				addr2[1] = 0;
-		                a2 = create_action(FORWARD_U, &(addr[0]), ADDRESS_LENGTH); 
+		                a2 = create_action(FORWARD_U, &(addr2[0]), ADDRESS_LENGTH); 
 		                add_action(e2,a2);
  	                        //Million ... window added
 				window_t* w2 = create_window();
@@ -443,7 +443,7 @@ const void* conf_ptr[RULE_TTL+1] =
 				w2->lhs = DST_INDEX;
 				//w->lhs = TYP_INDEX;
 				w2->lhs_location = PACKET;
-				w2->rhs = MERGE_BYTES(addr2[0], addr2[1]);
+				w2->rhs = MERGE_BYTES(addr[0], addr[1]);
 				w2->rhs_location = CONST;
 				add_window(e2,w2);
 				PRINTF("This Entry to be added to flowtable\n");
