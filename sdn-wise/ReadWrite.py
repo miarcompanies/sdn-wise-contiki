@@ -9,8 +9,8 @@ from datetime import datetime
 import networkx as nx
 def readUART(Topo):
 	try:
-		ser = serial.Serial('/dev/ttyUSB0',115200)
-	        time.sleep(10)
+		ser = serial.Serial('/dev/ttyUSB1',115200)
+	        #time.sleep(10)
 		prev_length = []
 		length = []
 		for t in range(10):
@@ -33,6 +33,18 @@ def readUART(Topo):
 						length[s] = len(topoarray)
 						print length[s]
 						if length[s] != prev_length[s]:#topology changes
+							if topoarray[0] == 3: #will be 2
+								resetcommand = str(2)
+	                                                	resetcommand += str(2)
+		                                                resetcommand += 'r'
+        		                        	        resetcommand += 'f'
+                		        	                resetcommand += str(2)
+                			                        resetcommand += str('\n')
+        	                		                print "Reset Command to send: "+resetcommand
+	                                		        bauni = bytearray(resetcommand)
+								ser.write(bauni)
+								print "Reset Command Sent at "
+                                                		print datetime.now().strftime('%H:%M:%S.%f')
 							Topo.clear()
 						prev_length[s] = length[s]
 				Topo.add_node(topoarray[0])
@@ -45,6 +57,7 @@ def readUART(Topo):
 				#for (u,v,d) in Topo.edges(data=True):
 				#	print d['weight']	
 			elif 'Request' in mtype:
+				print datetime.now().strftime('%H:%M:%S.%f')	
 				req = ser.readline()
                                 print 'Request:'+req
                                 reqarray = map(int, req.split(","))
@@ -67,6 +80,7 @@ def readUART(Topo):
 							print "Unicast Command to send: "+unicastcommand
 							bauni = bytearray(unicastcommand)
 				                        ser.write(bauni)
+							print datetime.now().strftime('%H:%M:%S.%f')
 							print "Command written to serial port"
 							time.sleep(2)
 					else:
@@ -79,6 +93,7 @@ def readUART(Topo):
 						print "Unicast Command to send: "+unicastcommand
 						bauni = bytearray(unicastcommand)
 						ser.write(bauni)
+						print datetime.now().strftime('%H:%M:%S.%f')
 				#		for x in range(len(shortpath)-1):
 				#			unicastcommand = str(shortpath[x]-1)
 				#			unicastcommand += str(shortpath[x]-1)
@@ -106,8 +121,8 @@ def readUART(Topo):
 		sys.exit()
 def writeUART(Topo):
 	try:
-	        ser = serial.Serial('/dev/ttyUSB0',115200)
-	        time.sleep(10)
+	        ser = serial.Serial('/dev/ttyUSB1',115200)
+	        #time.sleep(10)
 		#status = raw_input('Please enter your command - write Exit to quit\n')
 		print 'Please enter your command - write Exit to quit\n'
 		status = sys.stdin.readline() 
@@ -124,7 +139,8 @@ def writeUART(Topo):
 	except (KeyboardInterrupt):
                 sys.exit()
 if __name__=='__main__':
-	print("Simple Python Controller for SDN-WISE Starting .....")
+	print datetime.now().strftime('%H:%M:%S.%f')
+	print("Simple Python Controller for SDN-WISE Starting .....")	
 	Topo = nx.DiGraph()
 	threadwrite = threading.Thread(target = writeUART, args = [Topo])
 	threadwrite.Daemon = True
